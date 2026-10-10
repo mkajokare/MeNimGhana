@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeNim Ghana | Coming soon – Where Ghana Finds Business</title>
+<meta name="description" content="MeNim Ghana is a new business directory for Ghana, launching soon. Where Ghana Finds Business. Join the launch list to hear the moment we go live.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.menimghana.com/">
+<link rel="icon" type="image/png" href="Icons/menim-favicon.png">
+<link rel="apple-touch-icon" href="Icons/menim-logo-512.png">
+<meta name="theme-color" content="#CE1126">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeNim Ghana">
+<meta property="og:title" content="MeNim Ghana | Where Ghana Finds Business">
+<meta property="og:description" content="A new business directory for Ghana, launching soon. Join the launch list.">
+<meta property="og:url" content="https://www.menimghana.com/">
+<meta property="og:image" content="https://www.menimghana.com/Icons/menim-share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MeNim Ghana | Where Ghana Finds Business">
+<meta name="twitter:description" content="A new business directory for Ghana, launching soon. Join the launch list.">
+<meta name="twitter:image" content="https://www.menimghana.com/Icons/menim-share.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-red: #CE1126;
+    --brand-red-dark: #A50D1E;
+    --brand-gold: #FCD116;
+    --brand-gold-dark: #E0B800;
+    --brand-gold-text: #7A5F00;
+    --brand-gold-light: #FFFBE6;
+    --brand-green: #006B3F;
+    --brand-green-light: #E6F4EE;
+    --page-bg: #FAF8F3;
+    --white: #ffffff;
+    --gray-100: #F2F0EB;
+    --gray-200: #E0DDD5;
+    --gray-400: #74706A;
+    --gray-600: #5A5650;
+    --gray-800: #2A2723;
+    --gray-900: #1A1816;
+    --font-display: 'Syne', 'DM Sans', system-ui, sans-serif;
+    --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { color-scheme: light; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--font-body);
+    color: var(--gray-900);
+    background:
+      radial-gradient(900px 420px at 8% -5%, rgba(252,209,22,0.20), transparent 60%),
+      radial-gradient(900px 480px at 100% 105%, rgba(0,107,63,0.14), transparent 60%),
+      var(--page-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;
+  }
+  a { color: inherit; }
+  .flag-stripe { height: 5px; background: linear-gradient(to right, var(--brand-red) 33.33%, var(--brand-gold) 33.33%, var(--brand-gold) 66.66%, var(--brand-green) 66.66%); }
+  .skip-link { position: absolute; left: -9999px; top: 0; background: var(--gray-900); color: #fff; padding: 10px 14px; z-index: 10; }
+  .skip-link:focus { left: 0; }
+
+  /* header / wordmark */
+  .topbar { max-width: 1100px; width: 100%; margin: 0 auto; padding: 18px 20px 0; }
+  .logo { font-family: var(--font-display); font-size: 24px; font-weight: 800; text-decoration: none; letter-spacing: -0.5px; display: inline-flex; align-items: center; gap: 5px; }
+  .logo .logo-mark { height: 32px; width: auto; display: block; flex: none; margin-right: 3px; }
+  .logo .brand-menim { color: #1A1A1A; }
+  .logo .G { color: #CE1126; }
+  .logo .h, .logo .n { color: #E0B800; }
+  .logo .star { color: #1A1A1A; }
+  .logo .a { color: #006B3F; }
+
+  main { flex: 1; width: 100%; }
+  .hero { max-width: 760px; margin: 0 auto; padding: 34px 20px 8px; text-align: center; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--brand-gold-light); color: var(--brand-gold-text);
+    border: 1px solid #F0DF92; border-radius: 999px;
+    padding: 6px 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.2px;
+  }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-green); box-shadow: 0 0 0 0 rgba(0,107,63,0.5); animation: pulse 2.2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,107,63,0.45); } 70% { box-shadow: 0 0 0 9px rgba(0,107,63,0); } 100% { box-shadow: 0 0 0 0 rgba(0,107,63,0); } }
+  h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(34px, 8vw, 58px); line-height: 1.07; letter-spacing: -1.2px;
+    margin: 18px 0 16px; color: var(--gray-900);
+  }
+  h1, .lede { text-wrap: balance; }
+  h1 .hl { background: linear-gradient(transparent 62%, rgba(252,209,22,0.65) 62%); padding: 0 4px; }
+  .lede { font-size: clamp(16px, 2.6vw, 19px); color: var(--gray-600); max-width: 590px; margin: 0 auto; }
+
+  /* sign-up card */
+  .card {
+    max-width: 580px; margin: 30px auto 0; background: var(--white);
+    border: 1px solid var(--gray-200); border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.05);
+    padding: 28px; text-align: left;
+  }
+  .card h2 { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  .card .sub { color: var(--gray-600); font-size: 15px; margin: 4px 0 18px; }
+  fieldset { border: 0; min-width: 0; }
+  legend { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; padding: 0; }
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .choice { position: relative; display: block; cursor: pointer; }
+  .choice input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .choice .body {
+    display: block; height: 100%; border: 2px solid var(--gray-200); border-radius: 16px;
+    padding: 14px 14px 14px 14px; background: var(--white); transition: border-color .15s, background .15s, box-shadow .15s;
+  }
+  .choice:hover .body { border-color: #C9C5BB; }
+  .choice input:checked + .body { border-color: var(--brand-green); background: var(--brand-green-light); }
+  .choice input:focus-visible + .body { box-shadow: 0 0 0 3px rgba(252,209,22,0.75); }
+  .choice .ico { display: flex; width: 34px; height: 34px; border-radius: 10px; background: var(--gray-100); color: var(--gray-800); align-items: center; justify-content: center; margin-bottom: 10px; }
+  .choice input:checked + .body .ico { background: var(--brand-green); color: #fff; }
+  .choice .t { display: block; font-weight: 700; font-size: 15px; color: var(--gray-900); line-height: 1.25; }
+  .choice .d { display: block; font-size: 13px; color: var(--gray-600); margin-top: 3px; line-height: 1.35; }
+  .choice .tick { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; border-radius: 50%; background: var(--brand-green); color: #fff; display: none; align-items: center; justify-content: center; }
+  .choice input:checked ~ .tick { display: flex; }
+
+  .field { margin-top: 18px; }
+  label.lbl { display: block; font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; }
+  .input {
+    width: 100%; height: 54px; font: inherit; font-size: 16px; color: var(--gray-900);
+    border: 2px solid var(--gray-200); border-radius: 14px; padding: 0 16px; background: #fff; outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .input::placeholder { color: #9A958C; }
+  .input:focus { border-color: var(--brand-gold-dark); box-shadow: 0 0 0 3px rgba(252,209,22,0.35); }
+  .input[aria-invalid="true"] { border-color: var(--brand-red); }
+  .btn {
+    width: 100%; height: 56px; margin-top: 16px; border: 0; border-radius: 14px; cursor: pointer;
+    background: var(--brand-red); color: #fff; font: inherit; font-size: 16px; font-weight: 700; letter-spacing: 0.1px;
+    transition: background .15s, transform .05s;
+  }
+  .btn:hover { background: var(--brand-red-dark); }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 3px solid rgba(252,209,22,0.9); outline-offset: 2px; }
+  .btn[disabled] { opacity: .65; cursor: progress; }
+  .consent { font-size: 12.5px; color: var(--gray-400); margin-top: 12px; line-height: 1.5; }
+  .consent a { color: var(--gray-600); }
+  .msg { min-height: 0; margin-top: 14px; font-size: 14px; font-weight: 600; color: var(--brand-red-dark); }
+  .msg:empty { display: none; }
+  .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+  .done { text-align: center; padding: 10px 4px 6px; }
+  .done .check { width: 64px; height: 64px; border-radius: 50%; background: var(--brand-green); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .done h2 { font-size: 24px; }
+  .done p { color: var(--gray-600); margin-top: 8px; font-size: 16px; }
+  [hidden] { display: none !important; }
+
+  /* what's coming */
+  .features { max-width: 940px; margin: 44px auto 0; padding: 0 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .feature { background: rgba(255,255,255,0.75); border: 1px solid var(--gray-200); border-radius: 18px; padding: 20px; }
+  .feature .fi { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .feature:nth-child(1) .fi { background: var(--brand-red); color: #fff; }
+  .feature:nth-child(2) .fi { background: var(--brand-gold); color: var(--gray-900); }
+  .feature:nth-child(3) .fi { background: var(--brand-green); color: #fff; }
+  .feature h3 { font-family: var(--font-display); font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .feature p { font-size: 14px; color: var(--gray-600); }
+
+  footer { margin-top: 48px; border-top: 1px solid var(--gray-200); padding: 20px; text-align: center; font-size: 13px; color: var(--gray-400); }
+  footer a { color: var(--gray-600); }
+  footer .sep { margin: 0 8px; }
+
+  @media (max-width: 720px) { .features { grid-template-columns: 1fr; max-width: 580px; } }
+  @media (max-width: 480px) {
+    .hero { padding-top: 24px; }
+    .card { padding: 20px 16px; border-radius: 20px; margin-top: 24px; }
+    .choices { grid-template-columns: 1fr; gap: 10px; }
+    .choice .body { display: flex; align-items: center; gap: 12px; padding: 12px; }
+    .choice .ico { margin: 0; flex: none; }
+    .logo { font-size: 20px; }
+    .logo .logo-mark { height: 26px; }
+  }
+  @media (max-width: 480px) { footer .sep { display: none; } footer a { display: block; margin-top: 4px; } }
+  @media (max-width: 360px) { .logo { font-size: 17px; } .logo .logo-mark { height: 22px; } }
+  @media (prefers-reduced-motion: reduce) { .pill .dot { animation: none; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+<div class="flag-stripe"></div>
+
+<header class="topbar">
+  <a href="/" class="logo" aria-label="MeNim Ghana"><img class="logo-mark" src="Icons/menim-icon.png" alt="" width="43" height="32"><span class="brand-menim" aria-hidden="true">MeNim</span><span class="G" aria-hidden="true">G</span><span class="h" aria-hidden="true">h</span><span class="star" aria-hidden="true">★</span><span class="n" aria-hidden="true">n</span><span class="a" aria-hidden="true">a</span></a>
+</header>
+
+<main id="main-content">
+  <section class="hero">
+    <span class="pill"><span class="dot" aria-hidden="true"></span>Launching soon</span>
+    <h1>Where Ghana <span class="hl">Finds</span> Business</h1>
+    <p class="lede">MeNim Ghana is a new business directory for Ghana. It is built to make local businesses easy to find, and to help businesses be found. We are putting the finishing touches on it now.</p>
+
+    <div class="card" id="signupCard">
+      <div id="formWrap">
+        <h2>Get early access</h2>
+        <p class="sub">Join the launch list and we will email you when MeNim Ghana goes live.</p>
+
+        <form id="waitlistForm" novalidate autocomplete="on">
+          <fieldset>
+            <legend>I am a&hellip;</legend>
+            <div class="choices">
+              <label class="choice">
+                <input type="radio" name="role" value="owner" required>
+                <span class="body">
+                  <span class="ico" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M10 20v-6h4v6"/></svg>
+                  </span>
+                  <span>
+                    <span class="t">Business owner</span>
+                    <span class="d">I want to list my business</span>
+                  </span>
+                </span>
+                <span class="tick" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="role" value="visitor" required>
+                <span class="body">
+                  <span class="ico" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                  </span>
+                  <span>
+                    <span class="t">Visitor</span>
+                    <span class="d">I am looking for businesses</span>
+                  </span>
+                </span>
+                <span class="tick" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label class="lbl" for="email">Email address</label>
+            <input class="input" id="email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="254" placeholder="you@example.com" required>
+          </div>
+
+          <!-- spam trap: real visitors never see or fill this -->
+          <div class="hp" aria-hidden="true">
+            <label>Leave this empty <input type="text" name="website" id="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <p class="msg" id="formMsg" role="alert" aria-live="polite"></p>
+          <button class="btn" type="submit" id="submitBtn">Notify me at launch</button>
+          <p class="consent">By joining you agree that we may email you about the launch of MeNim Ghana. We will use your address only for that, and you can ask us to remove it at any time. See our <a href="PrivacyPolicy.html">privacy notice</a>.</p>
+        </form>
+        <noscript><p class="msg" style="display:block">Please turn on JavaScript to join the launch list.</p></noscript>
+      </div>
+
+      <div class="done" id="doneWrap" hidden tabindex="-1">
+        <div class="check" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div>
+        <h2>You are on the list</h2>
+        <p id="doneText">Thank you. We will email you when MeNim Ghana goes live.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" aria-label="What is coming">
+    <div class="feature">
+      <div class="fi" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+      <h3>Find what you need</h3>
+      <p>Search by the kind of business and the place, across all 16 regions of Ghana.</p>
+    </div>
+    <div class="feature">
+      <div class="fi" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/></svg></div>
+      <h3>Get your business found</h3>
+      <p>Show customers your contact details, opening hours, services and photos in one place.</p>
+    </div>
+    <div class="feature">
+      <div class="fi" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg></div>
+      <h3>Read and share reviews</h3>
+      <p>See what other people say before you choose, and leave your own review afterwards.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>&copy; <span id="year">2026</span> MeNim Ghana. All rights reserved. 🇬🇭</span>
+  <span class="sep">&middot;</span>
+  <a href="PrivacyPolicy.html">Privacy notice</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabase-client.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $('waitlistForm'), emailEl = $('email'), btn = $('submitBtn'), msg = $('formMsg');
+  var formWrap = $('formWrap'), doneWrap = $('doneWrap'), doneText = $('doneText');
+  var shownAt = Date.now();
+  var EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/;
+
+  $('year').textContent = new Date().getFullYear();
+
+  function say(text, field) {
+    msg.textContent = text || '';
+    emailEl.setAttribute('aria-invalid', field === 'email' ? 'true' : 'false');
+  }
+  function showDone(role) {
+    doneText.textContent = role === 'owner'
+      ? 'Thank you. We will email you when MeNim Ghana goes live, so you can add your business.'
+      : 'Thank you. We will email you when MeNim Ghana goes live, so you can start finding businesses.';
+    formWrap.hidden = true;
+    doneWrap.hidden = false;
+    try { doneWrap.focus(); } catch (e) {}
+  }
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    say('');
+    var roleEl = form.querySelector('input[name="role"]:checked');
+    var role = roleEl ? roleEl.value : '';
+    var email = (emailEl.value || '').trim();
+
+    if (!role) { say('Please choose whether you are a business owner or a visitor.'); return; }
+    if (!EMAIL_RE.test(email) || email.length > 254) { say('Please enter a valid email address.', 'email'); emailEl.focus(); return; }
+
+    // Spam traps: a filled hidden field, or a form "submitted" within 1.5 seconds of loading.
+    // Pretend it worked so bots learn nothing, but send nothing.
+    if ($('website').value || (Date.now() - shownAt) < 1500) { showDone(role); return; }
+
+    if (!window.sbClient || typeof window.sbClient.rpc !== 'function') {
+      say('Sorry, we could not reach the sign-up service. Please check your connection and try again.');
+      return;
+    }
+
+    btn.disabled = true;
+    var label = btn.textContent;
+    btn.textContent = 'Joining…';
+    window.sbClient.rpc('join_waitlist', { p_email: email, p_role: role }).then(function (res) {
+      if (res && res.error) { throw res.error; }
+      showDone(role);
+    }).catch(function () {
+      say('Sorry, something went wrong and we could not add you. Please try again in a moment.');
+    }).then(function () {
+      btn.disabled = false;
+      btn.textContent = label;
+    });
+  });
+
+  emailEl.addEventListener('input', function () { if (msg.textContent) say(''); });
+  form.addEventListener('change', function () { if (msg.textContent) say(''); });
+})();
+</script>
+</body>
+</html>
