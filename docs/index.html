@@ -164,6 +164,11 @@
   footer { margin-top: 48px; border-top: 1px solid var(--gray-200); padding: 20px; text-align: center; font-size: 13px; color: var(--gray-400); }
   footer a { color: var(--gray-600); }
   footer .sep { margin: 0 8px; }
+  .social { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .social .follow { font-weight: 700; color: var(--gray-800); margin-right: 4px; }
+  .social a { display: inline-block; padding: 7px 14px; border: 1px solid var(--gray-200); border-radius: 999px; background: rgba(255,255,255,0.8); text-decoration: none; font-weight: 600; color: var(--gray-800); transition: border-color .15s, color .15s; }
+  .social a:hover { border-color: var(--brand-green); color: var(--brand-green); }
+  .social a:focus-visible { outline: 3px solid rgba(252,209,22,0.9); outline-offset: 2px; }
 
   @media (max-width: 720px) { .features { grid-template-columns: 1fr; max-width: 580px; } }
   @media (max-width: 480px) {
@@ -175,7 +180,7 @@
     .logo { font-size: 20px; }
     .logo .logo-mark { height: 26px; }
   }
-  @media (max-width: 480px) { footer .sep { display: none; } footer a { display: block; margin-top: 4px; } }
+  @media (max-width: 480px) { footer .sep { display: none; } .legal a { display: block; margin-top: 4px; } }
   @media (max-width: 360px) { .logo { font-size: 17px; } .logo .logo-mark { height: 22px; } }
   @media (prefers-reduced-motion: reduce) { .pill .dot { animation: none; } * { transition: none !important; } }
 </style>
@@ -277,9 +282,18 @@
 </main>
 
 <footer>
-  <span>&copy; <span id="year">2026</span> MeNim Ghana. All rights reserved. 🇬🇭</span>
-  <span class="sep">&middot;</span>
-  <a href="PrivacyPolicy.html">Privacy notice</a>
+  <nav class="social" aria-label="MeNim Ghana on social media">
+    <span class="follow">Follow us</span>
+    <a href="https://www.facebook.com/MeNimGhana" rel="noopener">Facebook</a>
+    <a href="https://www.instagram.com/MeNimGhana" rel="noopener">Instagram</a>
+    <a href="https://www.tiktok.com/@MeNimGhana" rel="noopener">TikTok</a>
+    <a href="https://x.com/MeNimGhana" rel="noopener">X</a>
+  </nav>
+  <div class="legal">
+    <span>&copy; <span id="year">2026</span> MeNim Ghana. All rights reserved. 🇬🇭</span>
+    <span class="sep">&middot;</span>
+    <a href="PrivacyPolicy.html">Privacy notice</a>
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
