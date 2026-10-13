@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | MeNim Ghana</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="Icons/menim-favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-red: #CE1126; --brand-red-dark: #A50D1E; --brand-red-light: #FDEAED;
+    --brand-gold: #FCD116; --brand-gold-dark: #E0B800; --brand-gold-text: #8A6B00; --brand-gold-light: #FFFBE6;
+    --brand-green: #006B3F; --brand-green-light: #E6F4EE;
+    --white: #ffffff;
+    --gray-50: #FAF9F7; --gray-100: #F2F0EB; --gray-200: #E0DDD5;
+    --gray-400: #74706A; --gray-600: #5A5650; --gray-700: #403D38;
+    --gray-800: #2A2723; --gray-900: #1A1816;
+    --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px; --radius-xl: 24px;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.07);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+    --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-body); color: var(--gray-800); background: var(--gray-50); line-height: 1.6; font-size: 15px; }
+  .flag-stripe { height: 5px; background: linear-gradient(to right, var(--brand-red) 33.33%, var(--brand-gold) 33.33%, var(--brand-gold) 66.66%, var(--brand-green) 66.66%); }
+
+  .admin-header { background: var(--white); border-bottom: 1px solid var(--gray-100); }
+  .admin-header-inner { max-width: 900px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+  .logo { font-family: var(--font-display); font-size: 20px; font-weight: 800; color: var(--gray-900); text-decoration: none; }
+  .admin-badge { font-size: 12px; font-weight: 700; color: var(--white); background: var(--gray-900); padding: 3px 10px; border-radius: 999px; }
+
+  .admin-main { max-width: 900px; margin: 0 auto; padding: 28px 24px 60px; }
+  .gate-wrap { max-width: 900px; margin: 60px auto; padding: 0 24px; text-align: center; }
+  .gate-wrap p { color: var(--gray-600); margin-bottom: 16px; }
+  .btn-primary { display: inline-block; background: var(--brand-green); color: var(--white); text-decoration: none; padding: 10px 20px; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; }
+
+  .admin-section { margin-bottom: 36px; }
+  .admin-section h2 { font-family: var(--font-display); font-size: 18px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .count-badge { font-size: 12px; font-weight: 700; background: var(--gray-100); color: var(--gray-700); padding: 2px 9px; border-radius: 999px; }
+
+  .admin-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+  .admin-card-title { font-weight: 700; font-size: 15px; }
+  .admin-card-meta { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+  .admin-card-desc { font-size: 13px; color: var(--gray-700); margin-top: 8px; max-width: 480px; }
+  .admin-card-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .admin-card-actions button { font-family: inherit; font-size: 13px; font-weight: 700; border-radius: var(--radius-md); padding: 8px 14px; cursor: pointer; border: none; }
+  .btn-approve { background: var(--brand-green); color: var(--white); }
+  .btn-approve:hover { opacity: 0.88; }
+  .btn-reject { background: var(--white); color: var(--brand-red); border: 1.5px solid var(--brand-red-light) !important; }
+  .btn-reject:hover { background: var(--brand-red-light); }
+  .btn-verify-on { background: var(--brand-gold); color: var(--gray-900); }
+  .btn-verify-off { background: var(--white); color: var(--gray-600); border: 1.5px solid var(--gray-200) !important; }
+  .btn-sponsor-on { background: var(--brand-green); color: var(--white); }
+  .btn-sponsor-off { background: var(--white); color: var(--gray-600); border: 1.5px solid var(--gray-200) !important; }
+  .status-pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .status-pill-active { background: var(--brand-green-light); color: var(--brand-green); }
+  .status-pill-pending { background: var(--brand-gold-light); color: #92680A; }
+  .status-pill-rejected { background: var(--gray-100); color: var(--gray-500); }
+  .admin-card-actions button:disabled { opacity: 0.5; cursor: default; }
+
+  .empty-state { font-size: 13px; color: var(--gray-400); padding: 8px 2px; }
+  .admin-error { font-size: 13px; color: var(--brand-red); padding: 8px 2px; }
+
+  .admin-form { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 14px; }
+  .admin-form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .admin-form-row.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .admin-form-label { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+  .admin-form-input, .admin-form-textarea, .admin-form-select { border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 10px 12px; font-family: inherit; font-size: 14px; color: var(--gray-900); background: var(--white); }
+  .admin-form-textarea { resize: vertical; min-height: 100px; }
+  .admin-form-actions { display: flex; gap: 10px; }
+  .btn-neutral { background: var(--gray-50); color: var(--gray-700); border: 1px solid var(--gray-200); }
+  .status-pill-draft { background: var(--gray-100); color: var(--gray-500); }
+  .status-pill-published { background: var(--brand-green-light); color: var(--brand-green); }
+  .admin-note { font-size: 13px; color: var(--gray-600); margin-bottom: 12px; max-width: 640px; }
+  .admin-inline-form { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+  .admin-inline-form .admin-form-input { flex: 1; min-width: 220px; }
+  .admin-inline-form button { font-family: inherit; font-size: 14px; font-weight: 700; border-radius: var(--radius-md); padding: 10px 18px; cursor: pointer; border: none; }
+  .admin-inline-form button:disabled { opacity: 0.5; cursor: default; }
+  .admin-msg { font-size: 13px; margin-top: 10px; min-height: 18px; }
+  .admin-msg.ok { color: var(--brand-green); }
+  .admin-msg.err { color: var(--brand-red); }
+
+  /* Details pop-up */
+  .admin-card-main { flex: 1; min-width: 0; }
+  .admin-card-main[data-view] { cursor: pointer; }
+  .admin-card-main[data-view]:hover .admin-card-title { text-decoration: underline; }
+  body.dm-open { overflow: hidden; }
+  .dm-backdrop { position: fixed; inset: 0; background: rgba(13,13,13,0.55); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .dm-backdrop[hidden] { display: none; }
+  .dm { background: var(--white); border-radius: var(--radius-lg); box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: min(720px, 100%); max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px); display: flex; flex-direction: column; }
+  .dm-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 18px 20px 14px; border-bottom: 1px solid var(--gray-100); }
+  .dm-kicker { font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
+  .dm-head h3 { font-family: var(--font-display); font-size: 19px; line-height: 1.3; word-break: break-word; margin-top: 2px; }
+  .dm-x { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--gray-100); color: var(--gray-700); font-size: 14px; cursor: pointer; }
+  .dm-x:hover { background: var(--gray-200); }
+  .dm-body { overflow-y: auto; padding: 4px 20px 12px; }
+  .dm-sec { padding: 14px 0; border-bottom: 1px solid var(--gray-100); }
+  .dm-sec:last-child { border-bottom: 0; }
+  .dm-sec h4 { font-size: 12px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+  .dm-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 14px; padding: 5px 0; font-size: 14px; }
+  .dm-k { color: var(--gray-400); font-size: 13px; padding-top: 1px; }
+  .dm-v { word-break: break-word; }
+  .dm-pre { white-space: pre-wrap; }
+  .dm-na { color: var(--gray-400); font-style: italic; }
+  .dm-v a { color: var(--brand-green); }
+  .dm-v pre { font-size: 12px; background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: var(--radius-sm); padding: 8px; overflow-x: auto; white-space: pre-wrap; }
+  .dm-chips span { display: inline-block; background: var(--gray-100); border-radius: 999px; padding: 2px 10px; font-size: 12px; margin: 0 6px 6px 0; }
+  .dm-list div { padding: 2px 0; }
+  .dm-hours div { display: flex; gap: 10px; padding: 1px 0; }
+  .dm-hours span { display: inline-block; min-width: 92px; color: var(--gray-600); }
+  .dm-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+  .dm-photos a { display: block; }
+  .dm-photos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; border: 1px solid var(--gray-200); background: var(--gray-100); display: block; }
+  .dm-body-text { white-space: pre-wrap; background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: var(--radius-md); padding: 12px; font-size: 14px; max-height: 340px; overflow-y: auto; word-break: break-word; }
+  .dm-foot { padding: 12px 20px; border-top: 1px solid var(--gray-100); display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+  .dm-foot button, .dm-foot a.dm-link-btn { font-family: inherit; font-size: 13px; font-weight: 700; border-radius: var(--radius-md); padding: 9px 16px; cursor: pointer; border: none; text-decoration: none; display: inline-block; }
+  .dm-foot a.dm-link-btn, .dm-foot .dm-close { background: var(--gray-50); color: var(--gray-700); border: 1px solid var(--gray-200); }
+  .dm-foot button.btn-reject { border: 1.5px solid var(--brand-red-light); }
+  .dm-foot button:disabled { opacity: 0.5; cursor: default; }
+  @media (max-width: 600px) {
+    .admin-card-actions { flex-wrap: wrap; max-width: 100%; }
+    .dm-backdrop { padding: 0; align-items: flex-end; }
+    .dm { border-radius: 18px 18px 0 0; max-height: 92vh; max-height: 92dvh; }
+    .dm-row { grid-template-columns: 1fr; gap: 0; }
+    .dm-foot { justify-content: stretch; }
+    .dm-foot > * { flex: 1 1 auto; text-align: center; white-space: nowrap; }
+  }
+</style>
+<style id="brand-logo">
+.logo{display:inline-flex}
+.logo{align-items:center;gap:5px}
+.logo .logo-mark{height:30px;width:auto;display:block;flex:none;margin-right:3px}
+.logo .brand-menim{color:#1A1A1A}
+.logo .G{color:#CE1126}
+.logo .h,.logo .n{color:#E0B800}
+.logo .star{color:#1A1A1A}
+.logo .a{color:#006B3F}
+.footer-brand .logo .brand-menim,.footer-brand .logo .star{color:#fff}
+.footer-brand .logo .a{color:#3ED16B}
+</style>
+</head>
+<body>
+
+<div class="flag-stripe"></div>
+
+<div class="admin-header">
+  <div class="admin-header-inner">
+    <a href="index.html" class="logo" aria-label="MeNim Ghana"><img class="logo-mark" src="Icons/menim-icon.png" alt="" width="40" height="30"><span class="brand-menim" aria-hidden="true">MeNim</span><span class="G" aria-hidden="true">G</span><span class="h" aria-hidden="true">h</span><span class="star" aria-hidden="true">★</span><span class="n" aria-hidden="true">n</span><span class="a" aria-hidden="true">a</span></a>
+    <span class="admin-badge">Admin</span>
+  </div>
+</div>
+
+<div id="gateMessage" class="gate-wrap" style="display:none;">
+  <p id="gateText"></p>
+  <a href="Login.html" class="btn-primary" id="gateLoginLink" style="display:none;">Sign in</a>
+</div>
+
+<main id="adminMain" class="admin-main" style="display:none;">
+  <section class="admin-section">
+    <h2>Pending business listings <span class="count-badge" id="pendingBizCount">0</span></h2>
+    <div id="pendingBizList"></div>
+  </section>
+  <section class="admin-section">
+    <h2>Flagged reviews <span class="count-badge" id="flaggedReviewCount">0</span></h2>
+    <div id="flaggedReviewList"></div>
+  </section>
+  <section class="admin-section">
+    <h2>Pending claim requests <span class="count-badge" id="pendingClaimCount">0</span></h2>
+    <div id="pendingClaimList"></div>
+  </section>
+  <section class="admin-section">
+    <h2>All businesses <span class="count-badge" id="allBizCount">0</span></h2>
+    <div id="allBizList"></div>
+  </section>
+
+  <section class="admin-section">
+    <h2>Blog posts <span class="count-badge" id="blogPostCount">0</span></h2>
+
+    <div class="admin-form" id="blogPostForm" style="display:none;">
+      <input type="hidden" id="bpEditingId">
+      <div class="admin-form-row">
+        <label class="admin-form-label" for="bpTitle">Title</label>
+        <input class="admin-form-input" id="bpTitle" type="text" maxlength="200">
+      </div>
+      <div class="admin-form-row two-col">
+        <div>
+          <label class="admin-form-label" for="bpSlug">Slug (used in the URL)</label>
+          <input class="admin-form-input" id="bpSlug" type="text" maxlength="200" placeholder="top-10-chop-bars-in-accra">
+        </div>
+        <div>
+          <label class="admin-form-label" for="bpCategory">Category</label>
+          <input class="admin-form-input" id="bpCategory" type="text" maxlength="60" placeholder="Food, Business tips, ...">
+        </div>
+      </div>
+      <div class="admin-form-row">
+        <label class="admin-form-label" for="bpExcerpt">Excerpt (shown on the Blog listing page)</label>
+        <textarea class="admin-form-textarea" id="bpExcerpt" style="min-height:60px;" maxlength="300"></textarea>
+      </div>
+      <div class="admin-form-row">
+        <label class="admin-form-label" for="bpBody">Body (one paragraph per blank line)</label>
+        <textarea class="admin-form-textarea" id="bpBody" style="min-height:220px;"></textarea>
+      </div>
+      <div class="admin-form-row two-col">
+        <div>
+          <label class="admin-form-label" for="bpCoverEmoji">Cover emoji</label>
+          <input class="admin-form-input" id="bpCoverEmoji" type="text" maxlength="8" placeholder="🍲">
+        </div>
+        <div>
+          <label class="admin-form-label" for="bpReadMinutes">Read time (minutes)</label>
+          <input class="admin-form-input" id="bpReadMinutes" type="number" min="1" max="60">
+        </div>
+      </div>
+      <div class="admin-form-row two-col">
+        <div>
+          <label class="admin-form-label" for="bpAuthorName">Author name</label>
+          <input class="admin-form-input" id="bpAuthorName" type="text" maxlength="100" placeholder="MeNim Ghana Team">
+        </div>
+        <div>
+          <label class="admin-form-label" for="bpStatus">Status (new posts only)</label>
+          <select class="admin-form-select" id="bpStatus">
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+      </div>
+      <div class="admin-form-actions">
+        <button type="button" class="btn-approve" id="btnSavePost">Save post</button>
+        <button type="button" class="btn-neutral" id="btnCancelPost" style="border-radius:var(--radius-md);padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;">Cancel</button>
+      </div>
+      <p class="admin-error" id="blogFormError" style="display:none;"></p>
+    </div>
+
+    <button class="btn-approve" id="btnNewPost" type="button" style="border-radius:var(--radius-md);padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;border:none;margin-bottom:14px;">+ New post</button>
+    <div id="blogPostList"></div>
+  </section>
+
+  <section class="admin-section">
+    <h2>Deals <span class="count-badge" id="dealCount">0</span></h2>
+    <p style="font-size:13px;color:var(--gray-600);margin-bottom:12px;">Deals are created by business owners from their dashboard. Deactivating one here hides it from the public Deals page without deleting it.</p>
+    <div id="dealList"></div>
+  </section>
+
+  <section class="admin-section" id="adminsSection">
+    <h2>Admins <span class="count-badge" id="adminCount">0</span></h2>
+    <p class="admin-note">Admins can approve listings, remove reviews, publish blog posts and manage other admins. To add someone, enter the email address they sign in with. They get access the next time they sign in with that email (they must have confirmed it). You cannot remove yourself, so there is always at least one admin.</p>
+    <form class="admin-form" id="addAdminForm" novalidate>
+      <label class="admin-form-label" for="newAdminEmail">Email address</label>
+      <div class="admin-inline-form">
+        <input class="admin-form-input" id="newAdminEmail" type="email" autocomplete="off" maxlength="254" placeholder="name@example.com">
+        <button type="submit" class="btn-approve" id="btnAddAdmin">Add admin</button>
+      </div>
+      <p class="admin-msg" id="adminMsg" role="status" aria-live="polite"></p>
+    </form>
+    <div id="adminList"></div>
+  </section>
+</main>
+
+<div class="dm-backdrop" id="detailModal" hidden>
+  <div class="dm" role="dialog" aria-modal="true" aria-labelledby="dmTitle">
+    <div class="dm-head">
+      <div><div class="dm-kicker" id="dmKicker"></div><h3 id="dmTitle"></h3></div>
+      <button type="button" class="dm-x" id="dmClose" aria-label="Close details">✕</button>
+    </div>
+    <div class="dm-body" id="dmBody"></div>
+    <div class="dm-foot" id="dmFoot"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabase-client.js"></script>
+<script>
+  function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    return `${Math.floor(hours / 24)}d ago`;
+  }
+
+
+  /* ---------- Details pop-up: shows everything that was submitted ---------- */
+  const detailCache = { biz: {}, review: {}, claim: {}, post: {}, deal: {} };
+  function cacheRows(kind, rows, merge) {
+    if (!merge) detailCache[kind] = {};
+    (rows || []).forEach(r => { detailCache[kind][r.id] = r; });
+  }
+
+  const dmEmpty = v => v === null || v === undefined || v === '' ||
+    (Array.isArray(v) && !v.length) ||
+    (typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length);
+  const dmUrl = u => (/^https?:\/\/[^\s]+$/i.test(String(u || '').trim()) ? String(u).trim() : '');
+  const dmLabel = k => { const t = String(k).replace(/_/g, ' '); return t.charAt(0).toUpperCase() + t.slice(1); };
+
+  function dmDate(d, withAgo) {
+    if (!d) return '';
+    const t = new Date(d);
+    if (isNaN(t.getTime())) return escapeHtml(d);
+    const txt = t.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return escapeHtml(txt) + (withAgo ? ' <span class="dm-na">(' + escapeHtml(timeAgo(d)) + ')</span>' : '');
+  }
+
+  function dmVal(v, kind) {
+    switch (kind) {
+      case 'link': { const u = dmUrl(v); return u ? `<a href="${escapeHtml(u)}" target="_blank" rel="noopener noreferrer">${escapeHtml(u)}</a>` : escapeHtml(v); }
+      case 'email': return `<a href="mailto:${escapeHtml(v)}">${escapeHtml(v)}</a>`;
+      case 'tel': { const t = String(v).replace(/[^\d+]/g, ''); return t ? `<a href="tel:${escapeHtml(t)}">${escapeHtml(v)}</a>` : escapeHtml(v); }
+      case 'list': return '<div class="dm-chips">' + (v || []).map(x => `<span>${escapeHtml(typeof x === 'object' ? JSON.stringify(x) : x)}</span>`).join('') + '</div>';
+      case 'bool': return v ? 'Yes' : 'No';
+      case 'date': return dmDate(v, true);
+      case 'when': return dmDate(v, false);
+      case 'stars': { const n = Math.max(0, Math.min(5, Number(v) || 0)); return '<span aria-hidden="true">' + '★'.repeat(n) + '☆'.repeat(5 - n) + '</span> ' + n + ' / 5'; }
+      case 'json': return '<pre>' + escapeHtml(JSON.stringify(v, null, 2)) + '</pre>';
+      default: return '<span class="dm-pre">' + escapeHtml(v) + '</span>';
+    }
+  }
+
+  // One label/value line. Empty values show "Not provided" only when showNA is true.
+  function dmRow(label, v, kind, showNA) {
+    if (dmEmpty(v)) return showNA ? `<div class="dm-row"><div class="dm-k">${escapeHtml(label)}</div><div class="dm-v dm-na">Not provided</div></div>` : '';
+    return `<div class="dm-row"><div class="dm-k">${escapeHtml(label)}</div><div class="dm-v">${dmVal(v, kind)}</div></div>`;
+  }
+  function dmRowHtml(label, html) {
+    return html ? `<div class="dm-row"><div class="dm-k">${escapeHtml(label)}</div><div class="dm-v">${html}</div></div>` : '';
+  }
+  function dmSec(title, inner) { return inner && inner.trim() ? `<div class="dm-sec"><h4>${escapeHtml(title)}</h4>${inner}</div>` : ''; }
+
+  // Anything stored on the record that the sections above did not show.
+  function dmOther(row, known) {
+    const skip = new Set(known.concat(['businesses']));
+    return Object.keys(row).filter(k => !skip.has(k) && !dmEmpty(row[k])).map(k => {
+      const v = row[k];
+      if (Array.isArray(v)) return dmRow(dmLabel(k), v, 'list');
+      if (typeof v === 'object') return dmRow(dmLabel(k), v, 'json');
+      if (typeof v === 'boolean') return dmRow(dmLabel(k), v, 'bool');
+      return dmRow(dmLabel(k), v);
+    }).join('');
+  }
+
+  const DM_DAYS = [['mon', 'Monday'], ['tue', 'Tuesday'], ['wed', 'Wednesday'], ['thu', 'Thursday'], ['fri', 'Friday'], ['sat', 'Saturday'], ['sun', 'Sunday']];
+  function dmHours(b) {
+    if (b.is_24_hours) return 'Open 24 hours, every day';
+    if (b.hours_by_day && typeof b.hours_by_day === 'object') {
+      return '<div class="dm-hours">' + DM_DAYS.map(([k, label]) => {
+        const d = b.hours_by_day[k];
+        const t = (!d || d.closed || !d.open || !d.close) ? 'Closed' : escapeHtml(d.open) + ' – ' + escapeHtml(d.close);
+        return `<div><span>${label}</span>${t}</div>`;
+      }).join('') + '</div>';
+    }
+    if (b.opening_time && b.closing_time) return escapeHtml(String(b.opening_time).slice(0, 5)) + ' – ' + escapeHtml(String(b.closing_time).slice(0, 5)) + ' every day';
+    return '';
+  }
+
+  const DM_STATUS = { active: ['Active', 'status-pill-active'], pending: ['Pending', 'status-pill-pending'], rejected: ['Rejected', 'status-pill-rejected'] };
+  const dmPill = (label, cls) => `<span class="status-pill ${cls}">${escapeHtml(label)}</span>`;
+
+  function dmBusiness(b) {
+    const st = DM_STATUS[b.status] || [b.status || 'Unknown', ''];
+    const known = ['id', 'name', 'status', 'category', 'business_type', 'region', 'city', 'address', 'landmark', 'years_in_operation',
+      'created_at', 'phone', 'whatsapp', 'email', 'website', 'social_links', 'is_24_hours', 'opening_time', 'closing_time', 'hours_by_day',
+      'open_now', 'description', 'strapline', 'business_summary', 'services', 'payment_methods', 'accepts_momo', 'prices', 'highlights',
+      'awards', 'accreditations', 'qualifications', 'associations', 'areas_served', 'logo_url', 'image_urls', 'has_photos', 'video_url',
+      'latitude', 'longitude', 'verified', 'is_sponsored', 'rating', 'reviews_count', 'view_count', 'phone_click_count',
+      'whatsapp_click_count', 'claimed_by'];
+
+    const social = b.social_links && typeof b.social_links === 'object' && !Array.isArray(b.social_links)
+      ? Object.keys(b.social_links).filter(k => !dmEmpty(b.social_links[k])).map(k => {
+          const u = dmUrl(b.social_links[k]);
+          return `<div>${escapeHtml(dmLabel(k))}: ${u ? `<a href="${escapeHtml(u)}" target="_blank" rel="noopener noreferrer">${escapeHtml(u)}</a>` : escapeHtml(b.social_links[k])}</div>`;
+        }).join('') : '';
+    const prices = Array.isArray(b.prices) && b.prices.length
+      ? '<div class="dm-list">' + b.prices.map(p => `<div>${escapeHtml((p && p.name) || '')}${p && p.price ? ' — ' + escapeHtml(p.price) : ''}</div>`).join('') + '</div>' : '';
+    const photoUrls = (Array.isArray(b.image_urls) ? b.image_urls : []).map(dmUrl).filter(Boolean);
+    const photos = photoUrls.length
+      ? '<div class="dm-photos">' + photoUrls.map(u => `<a href="${escapeHtml(u)}" target="_blank" rel="noopener noreferrer"><img src="${escapeHtml(u)}" alt="Photo submitted with the listing" loading="lazy"></a>`).join('') + '</div>' : '';
+    const logo = dmUrl(b.logo_url) ? `<a href="${escapeHtml(dmUrl(b.logo_url))}" target="_blank" rel="noopener noreferrer"><img src="${escapeHtml(dmUrl(b.logo_url))}" alt="Logo" loading="lazy" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);"></a>` : '';
+    const mapLink = (b.latitude != null && b.longitude != null && !isNaN(Number(b.latitude)) && !isNaN(Number(b.longitude)))
+      ? `<a href="https://www.google.com/maps?q=${encodeURIComponent(Number(b.latitude) + ',' + Number(b.longitude))}" target="_blank" rel="noopener noreferrer">${escapeHtml(Number(b.latitude).toFixed(5))}, ${escapeHtml(Number(b.longitude).toFixed(5))} (open in Maps)</a>` : '';
+
+    const body =
+      dmSec('Business', dmRowHtml('Status', dmPill(st[0], st[1])) + dmRow('Name', b.name, 'text', true) + dmRow('Category', b.category, 'text', true) +
+        dmRow('Business type', b.business_type, 'text', true) + dmRow('Years in operation', b.years_in_operation, 'text', true) + dmRow('Submitted', b.created_at, 'date')) +
+      dmSec('Location', dmRow('Region', b.region, 'text', true) + dmRow('City / town', b.city, 'text', true) + dmRow('Address', b.address, 'text', true) +
+        dmRow('Landmark', b.landmark, 'text', true) + dmRowHtml('Map pin', mapLink)) +
+      dmSec('Contact', dmRow('Phone', b.phone, 'tel', true) + dmRow('WhatsApp', b.whatsapp, 'tel', true) + dmRow('Email', b.email, 'email', true) +
+        dmRow('Website', b.website, 'link', true) + dmRowHtml('Social links', social)) +
+      dmSec('Opening hours', dmRowHtml('Hours', dmHours(b)) || dmRow('Hours', null, 'text', true)) +
+      dmSec('About', dmRow('Description', b.description, 'text', true) + dmRow('Strapline', b.strapline, 'text') + dmRow('Summary', b.business_summary, 'text')) +
+      dmSec('What they offer', dmRow('Services', b.services, 'list') + dmRow('Payment methods', b.payment_methods, 'list') +
+        (b.accepts_momo ? dmRow('Mobile Money', true, 'bool') : '') + dmRowHtml('Prices', prices) + dmRow('Highlights', b.highlights, 'list') +
+        dmRow('Areas served', b.areas_served, 'list') + dmRow('Awards', b.awards, 'list') + dmRow('Accreditations', b.accreditations, 'list') +
+        dmRow('Qualifications', b.qualifications, 'list') + dmRow('Associations', b.associations, 'list')) +
+      dmSec('Photos and video', dmRowHtml('Logo', logo) + dmRowHtml('Photos (' + photoUrls.length + ')', photos) + (photoUrls.length ? '' : dmRow('Photos', null, 'text', true)) + dmRow('Video', b.video_url, 'link')) +
+      dmSec('Status and activity', dmRow('Verified', !!b.verified, 'bool') + dmRow('Sponsored', !!b.is_sponsored, 'bool') + dmRow('Rating', b.rating, 'text') +
+        dmRow('Reviews', b.reviews_count, 'text') + dmRow('Profile views', b.view_count, 'text') + dmRow('Phone clicks', b.phone_click_count, 'text') +
+        dmRow('WhatsApp clicks', b.whatsapp_click_count, 'text') + dmRow('Claimed by (account ID)', b.claimed_by, 'text')) +
+      dmSec('Other details', dmOther(b, known)) +
+      dmSec('Reference', dmRow('Listing ID', b.id, 'text'));
+
+    let actions = '';
+    if (b.status === 'pending') {
+      actions = `<button class="btn-approve" data-action="approve-biz" data-id="${escapeHtml(b.id)}">Approve</button><button class="btn-reject" data-action="reject-biz" data-id="${escapeHtml(b.id)}">Reject</button>`;
+    }
+    actions += `<a class="dm-link-btn" href="Businesses.html?id=${encodeURIComponent(b.id)}" target="_blank" rel="noopener">Open full page ↗</a>`;
+    return { kicker: 'Business listing', title: b.name || 'Business', body, actions };
+  }
+
+  function dmReview(r) {
+    const known = ['id', 'business_id', 'reviewer_name', 'rating', 'review_text', 'created_at', 'user_id', 'status', 'report_count', 'updated_at', 'owner_reply', 'owner_reply_at'];
+    const body =
+      dmSec('Review', dmRow('Business', r.businesses && r.businesses.name, 'text', true) + dmRow('Reviewer', r.reviewer_name, 'text', true) +
+        dmRow('Rating', r.rating, 'stars') + dmRow('Review', r.review_text, 'text', true) + dmRow('Status', r.status, 'text') +
+        dmRow('Reports', r.report_count, 'text') + dmRow('Posted', r.created_at, 'date') + dmRow('Last updated', r.updated_at, 'date')) +
+      dmSec('Owner reply', dmRow('Reply', r.owner_reply, 'text') + dmRow('Replied', r.owner_reply_at, 'date')) +
+      dmSec('Other details', dmOther(r, known)) +
+      dmSec('Reference', dmRow('Review ID', r.id, 'text') + dmRow('Reviewer account ID', r.user_id, 'text') + dmRow('Business ID', r.business_id, 'text'));
+    const actions = r.status === 'flagged'
+      ? `<button class="btn-approve" data-action="publish-review" data-id="${escapeHtml(r.id)}">Publish</button><button class="btn-reject" data-action="remove-review" data-id="${escapeHtml(r.id)}">Remove</button>` : '';
+    return { kicker: 'Flagged review', title: (r.reviewer_name || 'Reviewer') + ' on ' + ((r.businesses && r.businesses.name) || 'a business'), body, actions };
+  }
+
+  function dmClaim(c) {
+    const known = ['id', 'business_id', 'user_id', 'claimant_name', 'claimant_role', 'contact_info', 'message', 'status', 'created_at', 'reviewed_at'];
+    const body =
+      dmSec('Claim request', dmRow('Business', c.businesses && c.businesses.name, 'text', true) + dmRow('Claimant', c.claimant_name, 'text', true) +
+        dmRow('Role', c.claimant_role, 'text', true) + dmRow('Contact', c.contact_info, 'text', true) + dmRow('Message', c.message, 'text', true) +
+        dmRow('Status', c.status, 'text') + dmRow('Submitted', c.created_at, 'date') + dmRow('Reviewed', c.reviewed_at, 'date')) +
+      dmSec('Other details', dmOther(c, known)) +
+      dmSec('Reference', dmRow('Claim ID', c.id, 'text') + dmRow('Claimant account ID', c.user_id, 'text') + dmRow('Business ID', c.business_id, 'text'));
+    const actions = c.status === 'pending'
+      ? `<button class="btn-approve" data-action="approve-claim" data-id="${escapeHtml(c.id)}">Approve</button><button class="btn-reject" data-action="reject-claim" data-id="${escapeHtml(c.id)}">Reject</button>` : '';
+    return { kicker: 'Claim request', title: (c.claimant_name || 'Claimant') + ' claiming ' + ((c.businesses && c.businesses.name) || 'a business'), body, actions };
+  }
+
+  function dmPost(p) {
+    const known = ['id', 'title', 'slug', 'excerpt', 'body', 'cover_emoji', 'category', 'read_minutes', 'author_name', 'status', 'created_at', 'published_at'];
+    const text = p.body ? `<div class="dm-body-text">${escapeHtml(p.body)}</div>` : '';
+    const body =
+      dmSec('Post', dmRow('Title', p.title, 'text', true) + dmRowHtml('Status', dmPill(p.status === 'published' ? 'Published' : 'Draft', p.status === 'published' ? 'status-pill-published' : 'status-pill-draft')) +
+        dmRow('Category', p.category, 'text', true) + dmRow('Author', p.author_name, 'text', true) + dmRow('Cover emoji', p.cover_emoji, 'text') +
+        dmRow('Reading time', p.read_minutes ? p.read_minutes + ' min' : '', 'text') + dmRow('Web address (slug)', p.slug, 'text') +
+        dmRow('Created', p.created_at, 'date') + dmRow('Published', p.published_at, 'date')) +
+      dmSec('Excerpt', dmRow('Excerpt', p.excerpt, 'text', true)) +
+      dmSec('Full text', text || '<span class="dm-na">No text</span>') +
+      dmSec('Other details', dmOther(p, known)) +
+      dmSec('Reference', dmRow('Post ID', p.id, 'text'));
+    return { kicker: 'Blog post', title: p.title || 'Blog post', body, actions: '' };
+  }
+
+  function dmDeal(d) {
+    const expired = d.expires_at && new Date(d.expires_at).getTime() < Date.now();
+    const known = ['id', 'business_id', 'title', 'description', 'discount_label', 'terms', 'expires_at', 'active', 'created_at'];
+    const label = !d.active ? 'Deactivated' : (expired ? 'Expired' : 'Active');
+    const cls = !d.active || expired ? 'status-pill-draft' : 'status-pill-published';
+    const body =
+      dmSec('Deal', dmRow('Title', d.title, 'text', true) + dmRowHtml('Status', dmPill(label, cls)) + dmRow('Business', d.businesses && d.businesses.name, 'text', true) +
+        dmRow('Discount', d.discount_label, 'text', true) + dmRow('Description', d.description, 'text', true) + dmRow('Terms', d.terms, 'text', true) +
+        dmRow('Ends', d.expires_at, 'when', true) + dmRow('Created', d.created_at, 'date')) +
+      dmSec('Other details', dmOther(d, known)) +
+      dmSec('Reference', dmRow('Deal ID', d.id, 'text') + dmRow('Business ID', d.business_id, 'text'));
+    return { kicker: 'Deal', title: d.title || 'Deal', body, actions: '' };
+  }
+
+  const DM_BUILDERS = { biz: dmBusiness, review: dmReview, claim: dmClaim, post: dmPost, deal: dmDeal };
+  let dmLastFocus = null;
+
+  function openDetails(kind, id) {
+    const row = (detailCache[kind] || {})[id];
+    const build = DM_BUILDERS[kind];
+    if (!row || !build) return;
+    const d = build(row);
+    document.getElementById('dmKicker').textContent = d.kicker;
+    document.getElementById('dmTitle').textContent = d.title;
+    document.getElementById('dmBody').innerHTML = d.body;
+    document.getElementById('dmBody').scrollTop = 0;
+    document.getElementById('dmFoot').innerHTML = d.actions + '<button type="button" class="dm-close" id="dmCloseBtn">Close</button>';
+    dmLastFocus = document.activeElement;
+    document.getElementById('detailModal').hidden = false;
+    document.body.classList.add('dm-open');
+    document.getElementById('dmClose').focus();
+  }
+
+  function closeDetails() {
+    const m = document.getElementById('detailModal');
+    if (m.hidden) return;
+    m.hidden = true;
+    document.body.classList.remove('dm-open');
+    if (dmLastFocus && dmLastFocus.focus) { try { dmLastFocus.focus(); } catch (e) {} }
+    dmLastFocus = null;
+  }
+
+  document.addEventListener('click', function (e) {
+    const modal = document.getElementById('detailModal');
+    if (modal && !modal.hidden) {
+      if (e.target === modal || e.target.closest('#dmClose') || e.target.closest('#dmCloseBtn')) { closeDetails(); return; }
+      // Approve / reject / publish / remove from inside the pop-up: the page's own handler does the work, we just close.
+      if (e.target.closest('#dmFoot button[data-action]')) { setTimeout(closeDetails, 0); return; }
+    }
+    const t = e.target.closest('[data-view]');
+    if (t && !e.target.closest('a')) openDetails(t.dataset.view, t.dataset.id);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    const modal = document.getElementById('detailModal');
+    if (!modal || modal.hidden) return;
+    if (e.key === 'Escape') { closeDetails(); return; }
+    if (e.key !== 'Tab') return;
+    const items = Array.prototype.filter.call(modal.querySelectorAll('button, a[href]'), el => !el.disabled && el.offsetParent !== null);
+    if (!items.length) return;
+    const first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  async function loadPendingBusinesses() {
+    const list = document.getElementById('pendingBizList');
+    const countEl = document.getElementById('pendingBizCount');
+    const { data, error } = await window.sbClient.from('businesses').select('*').eq('status', 'pending').order('created_at', { ascending: false });
+    if (error) { list.innerHTML = '<p class="admin-error">Could not load pending listings.</p>'; return; }
+    countEl.textContent = (data || []).length;
+    cacheRows('biz', data, true);
+    if (!data || !data.length) { list.innerHTML = '<p class="empty-state">No pending listings.</p>'; return; }
+    list.innerHTML = data.map(biz => `
+      <div class="admin-card" data-id="${biz.id}">
+        <div class="admin-card-main" data-view="biz" data-id="${biz.id}">
+          <div class="admin-card-title">${escapeHtml(biz.name)}</div>
+          <div class="admin-card-meta">${escapeHtml(biz.category || '')} · ${escapeHtml(biz.city || biz.region || '')} · ${escapeHtml(biz.phone || 'No phone')} · submitted ${timeAgo(biz.created_at)}</div>
+          ${biz.description ? `<div class="admin-card-desc">${escapeHtml(biz.description)}</div>` : ''}
+        </div>
+        <div class="admin-card-actions">
+          <button class="btn-neutral" style="border-radius:var(--radius-md);" data-view="biz" data-id="${biz.id}">View details</button>
+          <button class="btn-approve" data-action="approve-biz" data-id="${biz.id}">Approve</button>
+          <button class="btn-reject" data-action="reject-biz" data-id="${biz.id}">Reject</button>
+        </div>
+      </div>`).join('');
+  }
+
+  async function loadFlaggedReviews() {
+    const list = document.getElementById('flaggedReviewList');
+    const countEl = document.getElementById('flaggedReviewCount');
+    const { data, error } = await window.sbClient.from('reviews').select('*, businesses(name)').eq('status', 'flagged').order('updated_at', { ascending: false });
+    if (error) { list.innerHTML = '<p class="admin-error">Could not load flagged reviews.</p>'; return; }
+    countEl.textContent = (data || []).length;
+    cacheRows('review', data);
+    if (!data || !data.length) { list.innerHTML = '<p class="empty-state">No flagged reviews.</p>'; return; }
+    list.innerHTML = data.map(r => `
+      <div class="admin-card" data-id="${r.id}">
+        <div class="admin-card-main" data-view="review" data-id="${r.id}">
+          <div class="admin-card-title">${escapeHtml(r.reviewer_name)} on ${escapeHtml(r.businesses?.name || 'a business')}</div>
+          <div class="admin-card-meta">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)} · ${r.report_count} report${r.report_count === 1 ? '' : 's'} · ${timeAgo(r.updated_at)}</div>
+          <div class="admin-card-desc">${escapeHtml(r.review_text)}</div>
+        </div>
+        <div class="admin-card-actions">
+          <button class="btn-neutral" style="border-radius:var(--radius-md);" data-view="review" data-id="${r.id}">View details</button>
+          <button class="btn-approve" data-action="publish-review" data-id="${r.id}">Publish</button>
+          <button class="btn-reject" data-action="remove-review" data-id="${r.id}">Remove</button>
+        </div>
+      </div>`).join('');
+  }
+
+  async function loadPendingClaims() {
+    const list = document.getElementById('pendingClaimList');
+    const countEl = document.getElementById('pendingClaimCount');
+    const { data, error } = await window.sbClient.from('claim_requests').select('*, businesses(name)').eq('status', 'pending').order('created_at', { ascending: false });
+    if (error) { list.innerHTML = '<p class="admin-error">Could not load claim requests.</p>'; return; }
+    countEl.textContent = (data || []).length;
+    cacheRows('claim', data);
+    if (!data || !data.length) { list.innerHTML = '<p class="empty-state">No pending claim requests.</p>'; return; }
+    list.innerHTML = data.map(c => `
+      <div class="admin-card" data-id="${c.id}">
+        <div class="admin-card-main" data-view="claim" data-id="${c.id}">
+          <div class="admin-card-title">${escapeHtml(c.claimant_name)} (${escapeHtml(c.claimant_role)}) claiming ${escapeHtml(c.businesses?.name || 'a business')}</div>
+          <div class="admin-card-meta">Contact: ${escapeHtml(c.contact_info)} · ${timeAgo(c.created_at)}</div>
+          ${c.message ? `<div class="admin-card-desc">${escapeHtml(c.message)}</div>` : ''}
+        </div>
+        <div class="admin-card-actions">
+          <button class="btn-neutral" style="border-radius:var(--radius-md);" data-view="claim" data-id="${c.id}">View details</button>
+          <button class="btn-approve" data-action="approve-claim" data-id="${c.id}">Approve</button>
+          <button class="btn-reject" data-action="reject-claim" data-id="${c.id}">Reject</button>
+        </div>
+      </div>`).join('');
+  }
+
+  async function loadAllBusinesses() {
+    const list = document.getElementById('allBizList');
+    const countEl = document.getElementById('allBizCount');
+    const { data, error } = await window.sbClient.from('businesses').select('*').order('name', { ascending: true });
+    if (error) { list.innerHTML = '<p class="admin-error">Could not load businesses.</p>'; return; }
+    countEl.textContent = (data || []).length;
+    cacheRows('biz', data, true);
+    if (!data || !data.length) { list.innerHTML = '<p class="empty-state">No businesses yet.</p>'; return; }
+    const statusPill = { active: ['Active', 'status-pill-active'], pending: ['Pending', 'status-pill-pending'], rejected: ['Rejected', 'status-pill-rejected'] };
+    list.innerHTML = data.map(biz => {
+      const [label, cls] = statusPill[biz.status] || [biz.status || 'Unknown', ''];
+      return `
+      <div class="admin-card" data-id="${biz.id}">
+        <div class="admin-card-main" data-view="biz" data-id="${biz.id}">
+          <div class="admin-card-title">${escapeHtml(biz.name)} <span class="status-pill ${cls}">${label}</span></div>
+          <div class="admin-card-meta">${escapeHtml(biz.category || '')} · ${escapeHtml(biz.city || biz.region || '')}</div>
+        </div>
+        <div class="admin-card-actions">
+          <button class="btn-neutral" style="border-radius:var(--radius-md);" data-view="biz" data-id="${biz.id}">View details</button>
+          <button class="${biz.verified ? 'btn-verify-on' : 'btn-verify-off'}" data-action="toggle-verified" data-id="${biz.id}" data-verified="${biz.verified ? 'true' : 'false'}">${biz.verified ? '✓ Verified' : '☆ Not verified'}</button>
+          <button class="${biz.is_sponsored ? 'btn-sponsor-on' : 'btn-sponsor-off'}" data-action="toggle-sponsored" data-id="${biz.id}" data-sponsored="${biz.is_sponsored ? 'true' : 'false'}">${biz.is_sponsored ? '📈 Sponsored' : '☆ Not sponsored'}</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function loadBlogPosts() {
+    const list = document.getElementById('blogPostList');
+    const countEl = document.getElementById('blogPostCount');
+    const { data, error } = await window.sbClient.from('blog_posts').select('*').order('created_at', { ascending: false });
+    if (error) { list.innerHTML = '<p class="admin-error">Could not load blog posts.</p>'; return; }
+    countEl.textContent = (data || []).length;
+    cacheRows('post', data);
+    if (!data || !data.length) { list.innerHTML = '<p class="empty-state">No blog posts yet.</p>'; return; }
+    list.innerHTML = data.map(post => `
+      <div class="admin-card" data-id="${post.id}">
+        <div class="admin-card-main" data-view="post" data-id="${post.id}">
+          <div class="admin-card-title">${post.cover_emoji ? escapeHtml(post.cover_emoji) + ' ' : ''}${escapeHtml(post.title)} <span class="status-pill ${post.status === 'published' ? 'status-pill-published' : 'status-pill-draft'}">${post.status === 'published' ? 'Published' : 'Draft'}</span></div>
+          <div class="admin-card-meta">${escapeHtml(post.category || 'Uncategorized')} · ${escapeHtml(post.author_name)} · ${timeAgo(post.created_at)}</div>
+          <div class="admin-card-desc">${escapeHtml(post.excerpt || '')}</div>
+        </div>
+        <div class="admin-card-actions">
+          <button class="btn-neutral" style="border-radius:var(--radius-md);" data-view="post" data-id="${post.id}">View details</button>
+          <button class="btn-neutral" style="border-radius:var(--radius-md);" data-action="edit-post" data-id="${post.id}">Edit</button>
+          <button class="${post.status === 'published' ? 'btn-reject' : 'btn-approve'}" data-action="toggle-post-status" data-id="${post.id}" data-status="${post.status}">${post.status === 'published' ? 'Unpublish' : 'Publish'}</button>
+          <button class="btn-reject" data-action="delete-post" data-id="${post.id}">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+
+  let blogPostsCache = [];
+  async function refreshBlogPostsCache() {
+    const { data } = await window.sbClient.from('blog_posts').select('*').order('created_at', { ascending: false });
+    blogPostsCache = data || [];
+  }
+
+  function openPostForm(post) {
+    document.getElementById('blogPostForm').style.display = 'block';
+    document.getElementById('blogFormError').style.display = 'none';
+    document.getElementById('bpEditingId').value = post ? post.id : '';
+    document.getElementById('bpTitle').value = post ? post.title : '';
+    document.getElementById('bpSlug').value = post ? post.slug : '';
+    document.getElementById('bpCategory').value = post ? (post.category || '') : '';
+    document.getElementById('bpExcerpt').value = post ? (post.excerpt || '') : '';
+    document.getElementById('bpBody').value = post ? post.body : '';
+    document.getElementById('bpCoverEmoji').value = post ? (post.cover_emoji || '') : '';
+    document.getElementById('bpReadMinutes').value = post ? (post.read_minutes || '') : '';
+    document.getElementById('bpAuthorName').value = post ? post.author_name : '';
+    document.getElementById('bpStatus').value = 'draft';
+    // Slug and status only make sense on create -- a live post's URL shouldn't
+    // change from under anyone sharing it, and status has its own Publish/
+    // Unpublish button in the list instead.
+    document.getElementById('bpSlug').disabled = !!post;
+    document.getElementById('bpSlug').parentElement.style.display = post ? 'none' : '';
+    document.getElementById('bpStatus').parentElement.style.display = post ? 'none' : '';
+    document.getElementById('bpTitle').focus();
+  }
+
+  function slugify(title) {
+    return title.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 180);
+  }
+
+  document.getElementById('btnNewPost').addEventListener('click', () => openPostForm(null));
+  document.getElementById('btnCancelPost').addEventListener('click', () => { document.getElementById('blogPostForm').style.display = 'none'; });
+  document.getElementById('bpTitle').addEventListener('input', function () {
+    if (!document.getElementById('bpEditingId').value && !document.getElementById('bpSlug').dataset.manuallyEdited) {
+      document.getElementById('bpSlug').value = slugify(this.value);
+    }
+  });
+  document.getElementById('bpSlug').addEventListener('input', function () { this.dataset.manuallyEdited = 'true'; });
+
+  document.getElementById('btnSavePost').addEventListener('click', async function () {
+    const errEl = document.getElementById('blogFormError');
+    errEl.style.display = 'none';
+    const editingId = document.getElementById('bpEditingId').value;
+    const title = document.getElementById('bpTitle').value.trim();
+    const slug = document.getElementById('bpSlug').value.trim();
+    const body = document.getElementById('bpBody').value.trim();
+    if (!title || !body || (!editingId && !slug)) {
+      errEl.textContent = 'Title and body are required (and a slug, for a new post).';
+      errEl.style.display = 'block';
+      return;
+    }
+    const excerpt = document.getElementById('bpExcerpt').value.trim() || null;
+    const category = document.getElementById('bpCategory').value.trim() || null;
+    const coverEmoji = document.getElementById('bpCoverEmoji').value.trim() || null;
+    const readMinutes = parseInt(document.getElementById('bpReadMinutes').value, 10) || null;
+    const authorName = document.getElementById('bpAuthorName').value.trim() || 'MeNim Ghana Team';
+
+    this.disabled = true;
+    try {
+      if (editingId) {
+        const { error } = await window.sbClient.rpc('admin_update_blog_post', {
+          p_post_id: editingId, p_title: title, p_excerpt: excerpt, p_body: body,
+          p_cover_emoji: coverEmoji, p_category: category, p_read_minutes: readMinutes, p_author_name: authorName,
+        });
+        if (error) throw error;
+      } else {
+        const status = document.getElementById('bpStatus').value;
+        const { error } = await window.sbClient.rpc('admin_create_blog_post', {
+          p_title: title, p_slug: slug, p_excerpt: excerpt, p_body: body,
+          p_cover_emoji: coverEmoji, p_category: category, p_read_minutes: readMinutes,
+          p_author_name: authorName, p_status: status,
+        });
+        if (error) throw error;
+      }
+      document.getElementById('blogPostForm').style.display = 'none';
+      await loadBlogPosts();
+    } catch (err) {
+      errEl.textContent = err.message || 'Could not save this post.';
+      errEl.style.display = 'block';
+    } finally {
+      this.disabled = false;
+    }
+  });
+
+  async function loadDeals() {
+    const list = document.getElementById('dealList');
+    const countEl = document.getElementById('dealCount');
+    const { data, error } = await window.sbClient
+      .from('deals')
+      .select('*, businesses(name)')
+      .order('created_at', { ascending: false });
+    if (error) { list.innerHTML = '<p class="admin-error">Could not load deals.</p>'; return; }
+    countEl.textContent = (data || []).length;
+    cacheRows('deal', data);
+    if (!data || !data.length) { list.innerHTML = '<p class="empty-state">No deals yet.</p>'; return; }
+    const now = Date.now();
+    list.innerHTML = data.map(deal => {
+      const expired = deal.expires_at && new Date(deal.expires_at).getTime() < now;
+      const statusLabel = !deal.active ? 'Deactivated' : (expired ? 'Expired' : 'Active');
+      const statusCls = !deal.active ? 'status-pill-draft' : (expired ? 'status-pill-draft' : 'status-pill-published');
+      return `
+      <div class="admin-card" data-id="${deal.id}">
+        <div class="admin-card-main" data-view="deal" data-id="${deal.id}">
+          <div class="admin-card-title">${escapeHtml(deal.title)} <span class="status-pill ${statusCls}">${statusLabel}</span></div>
+          <div class="admin-card-meta">${escapeHtml(deal.businesses?.name || 'Unknown business')}${deal.discount_label ? ' · ' + escapeHtml(deal.discount_label) : ''}${deal.expires_at ? ' · Ends ' + new Date(deal.expires_at).toLocaleDateString() : ''}</div>
+          <div class="admin-card-desc">${escapeHtml(deal.description || '')}</div>
+        </div>
+        <div class="admin-card-actions">
+          <button class="btn-neutral" style="border-radius:var(--radius-md);" data-view="deal" data-id="${deal.id}">View details</button>
+          <button class="${deal.active ? 'btn-reject' : 'btn-approve'}" data-action="toggle-deal-active" data-id="${deal.id}" data-active="${deal.active ? 'true' : 'false'}">${deal.active ? 'Deactivate' : 'Reactivate'}</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function adminMsg(text, ok) {
+    const el = document.getElementById('adminMsg');
+    el.textContent = text || '';
+    el.className = 'admin-msg' + (text ? (ok ? ' ok' : ' err') : '');
+  }
+
+  function adminErrorText(error) {
+    const m = (error && error.message) || String(error || '');
+    if (error && (error.code === 'PGRST202' || /could not find the function/i.test(m))) {
+      return 'Admin management is not set up yet. Run migration 010 in the Supabase SQL Editor, then reload this page.';
+    }
+    return m || 'Something went wrong. Please try again.';
+  }
+
+  async function loadAdmins() {
+    const list = document.getElementById('adminList');
+    const countEl = document.getElementById('adminCount');
+    const { data, error } = await window.sbClient.rpc('admin_list_admins');
+    if (error) { list.innerHTML = '<p class="admin-error">' + escapeHtml(adminErrorText(error)) + '</p>'; return; }
+    countEl.textContent = (data || []).length;
+    if (!data || !data.length) { list.innerHTML = '<p class="empty-state">No admins found.</p>'; return; }
+    list.innerHTML = data.map(a => `
+      <div class="admin-card">
+        <div class="admin-card-main">
+          <div class="admin-card-title">${escapeHtml(a.email)}${a.is_you ? ' <span class="status-pill status-pill-published">You</span>' : ''}${a.has_account ? '' : ' <span class="status-pill status-pill-draft">Has not signed up yet</span>'}</div>
+          <div class="admin-card-meta">${a.added_by ? 'Added by ' + escapeHtml(a.added_by) + ' · ' + timeAgo(a.added_at) : 'Original admin'}</div>
+        </div>
+        <div class="admin-card-actions">
+          ${a.is_you ? '' : `<button class="btn-reject" data-action="remove-admin" data-email="${escapeHtml(a.email)}">Remove admin</button>`}
+        </div>
+      </div>`).join('');
+  }
+
+  document.getElementById('addAdminForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const input = document.getElementById('newAdminEmail');
+    const btn = document.getElementById('btnAddAdmin');
+    const email = input.value.trim();
+    if (!email) { adminMsg('Enter an email address.', false); input.focus(); return; }
+    btn.disabled = true;
+    adminMsg('Adding…', true);
+    try {
+      const { error } = await window.sbClient.rpc('admin_add_admin', { p_email: email });
+      if (error) { adminMsg(adminErrorText(error), false); }
+      else { input.value = ''; adminMsg(email.toLowerCase() + ' can now sign in as an admin.', true); await loadAdmins(); }
+    } catch (err) {
+      adminMsg(adminErrorText(err), false);
+    }
+    btn.disabled = false;
+  });
+
+  document.addEventListener('click', async function (e) {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+
+    if (action === 'edit-post') {
+      await refreshBlogPostsCache();
+      const post = blogPostsCache.find(p => p.id === id);
+      if (post) openPostForm(post);
+      return;
+    }
+
+    if (action === 'remove-admin') {
+      const email = btn.dataset.email;
+      if (!confirm('Remove admin access for ' + email + '? They will no longer be able to open this page or use admin tools.')) return;
+      btn.disabled = true;
+      adminMsg('', true);
+      try {
+        const { error } = await window.sbClient.rpc('admin_remove_admin', { p_email: email });
+        if (error) { adminMsg(adminErrorText(error), false); btn.disabled = false; }
+        else { adminMsg(email + ' is no longer an admin.', true); await loadAdmins(); }
+      } catch (err) {
+        adminMsg(adminErrorText(err), false);
+        btn.disabled = false;
+      }
+      return;
+    }
+
+    btn.disabled = true;
+    try {
+      if (action === 'approve-biz') await window.sbClient.rpc('admin_set_business_status', { p_business_id: id, p_status: 'active' });
+      else if (action === 'reject-biz') await window.sbClient.rpc('admin_set_business_status', { p_business_id: id, p_status: 'rejected' });
+      else if (action === 'publish-review') await window.sbClient.rpc('admin_resolve_review', { p_review_id: id, p_status: 'published' });
+      else if (action === 'remove-review') await window.sbClient.rpc('admin_resolve_review', { p_review_id: id, p_status: 'removed' });
+      else if (action === 'approve-claim') await window.sbClient.rpc('admin_resolve_claim', { p_claim_id: id, p_approve: true });
+      else if (action === 'reject-claim') await window.sbClient.rpc('admin_resolve_claim', { p_claim_id: id, p_approve: false });
+      else if (action === 'toggle-verified') await window.sbClient.rpc('admin_set_verified', { p_business_id: id, p_verified: btn.dataset.verified !== 'true' });
+      else if (action === 'toggle-sponsored') await window.sbClient.rpc('admin_set_sponsored', { p_business_id: id, p_sponsored: btn.dataset.sponsored !== 'true' });
+      else if (action === 'toggle-post-status') await window.sbClient.rpc('admin_set_blog_post_status', { p_post_id: id, p_status: btn.dataset.status === 'published' ? 'draft' : 'published' });
+      else if (action === 'delete-post') { if (!confirm('Delete this post permanently?')) { btn.disabled = false; return; } await window.sbClient.rpc('admin_delete_blog_post', { p_post_id: id }); }
+      else if (action === 'toggle-deal-active') await window.sbClient.rpc('admin_set_deal_active', { p_deal_id: id, p_active: btn.dataset.active !== 'true' });
+
+      if (action === 'toggle-verified' || action === 'toggle-sponsored') await loadAllBusinesses();
+      else if (action.includes('biz')) await Promise.all([loadPendingBusinesses(), loadAllBusinesses()]);
+      else if (action.includes('review')) await loadFlaggedReviews();
+      else if (action.includes('claim')) await loadPendingClaims();
+      else if (action.includes('post')) await loadBlogPosts();
+      else if (action.includes('deal')) await loadDeals();
+    } catch (err) {
+      alert('That action failed: ' + (err.message || err));
+      btn.disabled = false;
+    }
+  });
+
+  async function checkAdminAndLoad() {
+    const gateMessage = document.getElementById('gateMessage');
+    const gateText = document.getElementById('gateText');
+    const gateLoginLink = document.getElementById('gateLoginLink');
+    const adminMain = document.getElementById('adminMain');
+
+    const { data: { session } } = await window.sbClient.auth.getSession();
+    if (!session) {
+      gateMessage.style.display = 'block';
+      gateText.textContent = 'Sign in with an admin account to view this page.';
+      gateLoginLink.style.display = 'inline-block';
+      return;
+    }
+
+    const { data: isAdminResult, error } = await window.sbClient.rpc('is_admin');
+    if (error || !isAdminResult) {
+      gateMessage.style.display = 'block';
+      gateText.textContent = "This account doesn't have admin access.";
+      gateLoginLink.style.display = 'none';
+      return;
+    }
+
+    adminMain.style.display = 'block';
+    await Promise.all([loadPendingBusinesses(), loadFlaggedReviews(), loadPendingClaims(), loadAllBusinesses(), loadBlogPosts(), loadDeals(), loadAdmins()]);
+  }
+
+  document.addEventListener('DOMContentLoaded', checkAdminAndLoad);
+</script>
+</body>
+</html>
