@@ -283,6 +283,14 @@
   .claim-status-line { font-size: 13px; color: var(--gray-600); display: flex; align-items: center; gap: 6px; }
   .claim-status-line.approved { color: var(--brand-green); font-weight: 600; }
   .claim-form-wrap select { width: 100%; border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 9px 11px; font-family: inherit; font-size: 14px; margin-bottom: 8px; background: var(--white); }
+  .claim-cta-quiet { color: var(--gray-500); font-weight: 500; font-size: 12px; }
+  .claim-intro { font-size: 13px; color: var(--gray-600); line-height: 1.5; margin: 0 0 10px; }
+  .claim-label { font-size: 12px; font-weight: 600; color: var(--gray-700); margin: 2px 0 4px; display: block; }
+  .claim-hint { font-size: 12px; color: var(--gray-500); line-height: 1.45; margin: -2px 0 10px; }
+  .claim-hint a { color: var(--brand-green); }
+  .claim-form-wrap input[type=file] { padding: 8px; font-size: 13px; background: var(--white); }
+  .claim-note { display: block; margin: 4px 0; color: var(--gray-700); }
+  .claim-rejected { flex-wrap: wrap; display: block; line-height: 1.5; }
 
   /* Hours card */
   .hours-list { display: flex; flex-direction: column; gap: 0; }
@@ -1420,16 +1428,22 @@
   /* ---------- Real reviews: sign-in gated submission, live rating, report/abuse ---------- */
   let currentUserId = null;
   let currentUserName = null;
+  let currentUserMeta = null;
+  let currentUserEmail = null;
 
   async function getCurrentUser() {
     const { data: { session } } = await window.sbClient.auth.getSession();
     if (session && session.user) {
       currentUserId = session.user.id;
       const meta = session.user.user_metadata || {};
+      currentUserMeta = meta;
+      currentUserEmail = session.user.email || null;
       currentUserName = meta.display_name || meta.full_name || (session.user.email ? session.user.email.split('@')[0] : 'MeNim Ghana user');
     } else {
       currentUserId = null;
       currentUserName = null;
+      currentUserMeta = null;
+      currentUserEmail = null;
     }
     return currentUserId;
   }
@@ -1730,20 +1744,33 @@
   }
 
   /* ---------- Claim-this-listing flow ----------
-     Sign-in gated, like reviews. Submits to claim_requests; a server-side
-     trigger auto-approves when the signed-in user's account email matches
-     the business's own listed email (the one honest verification signal
-     available without a real admin backend) -- otherwise it stays pending
-     for manual review. */
+     Sign-in gated, like reviews. The claimant says what type of business it is,
+     gives a registration number when it is a registered business, and uploads
+     a supporting document to a PRIVATE storage bucket (only they and admins can
+     open it). Submits to claim_requests; a server-side trigger enforces all of
+     this, auto-approves only when the account's confirmed email matches the
+     listing's own email and the listing has no owner, and saves a claim on an
+     already-owned listing as a dispute (the current owner keeps it until an
+     admin decides). */
+  const CLAIM_TYPES = [
+    ['sole_proprietor', 'Sole proprietorship (business name registered)', true],
+    ['partnership', 'Partnership', true],
+    ['private_company', 'Private limited company (Ltd)', true],
+    ['public_company', 'Public limited company (PLC)', true],
+    ['nonprofit', 'Non-profit / NGO (company limited by guarantee)', true],
+    ['foreign_branch', 'Branch of a foreign company', true],
+    ['not_registered', 'Not registered yet', false],
+    ['not_sure', 'Not sure', false]
+  ];
+  const CLAIM_FILE_TYPES = { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+  const CLAIM_MAX_BYTES = 5 * 1024 * 1024;
+
   async function setupClaimSection(biz) {
     const section = document.getElementById('claimSection');
     if (!section) return;
     await getCurrentUser();
 
-    if (biz.claimed_by && biz.claimed_by !== currentUserId) {
-      section.style.display = 'none';
-      return;
-    }
+    const isDispute = !!(biz.claimed_by && biz.claimed_by !== currentUserId);
     section.style.display = '';
 
     if (biz.claimed_by && biz.claimed_by === currentUserId) {
@@ -1752,63 +1779,145 @@
     }
 
     if (!currentUserId) {
-      section.innerHTML = `<a href="Login.html" class="claim-cta-link">🏷️ Is this your business? Sign in to claim it</a>`;
+      section.innerHTML = isDispute
+        ? `<a href="Login.html" class="claim-cta-link claim-cta-quiet">Is this actually your business? Sign in to tell us</a>`
+        : `<a href="Login.html" class="claim-cta-link">🏷️ Is this your business? Sign in to claim it</a>`;
       return;
     }
 
     const { data: existing } = await window.sbClient
       .from('claim_requests')
-      .select('status')
+      .select('status, decision_note')
       .eq('business_id', biz.id)
       .eq('user_id', currentUserId)
       .maybeSingle();
 
     if (existing && existing.status === 'pending') {
-      section.innerHTML = `<div class="claim-status-line">⏳ Your claim request is pending review.</div>`;
+      section.innerHTML = `<div class="claim-status-line">⏳ Your ${isDispute ? 'ownership request' : 'claim request'} is pending review. You can follow it on your Profile page.</div>`;
       return;
     }
     if (existing && existing.status === 'rejected') {
-      section.innerHTML = `<div class="claim-status-line">Your previous claim request wasn't approved. <a href="mailto:support@menimghana.com">Contact support</a> if this is your business.</div>`;
+      section.innerHTML = `<div class="claim-status-line claim-rejected"></div>`;
+      const line = section.firstChild;
+      line.appendChild(document.createTextNode("Your earlier request wasn't approved. "));
+      if (existing.decision_note) {
+        const note = document.createElement('span');
+        note.className = 'claim-note';
+        note.textContent = 'Reviewer note: ' + existing.decision_note;
+        line.appendChild(note);
+        line.appendChild(document.createTextNode(' '));
+      }
+      const a = document.createElement('a');
+      a.href = 'mailto:support@menimghana.com';
+      a.textContent = 'Contact support';
+      line.appendChild(a);
+      line.appendChild(document.createTextNode(' if this is your business.'));
       return;
     }
 
+    // Pre-fill from what the person told us when they set up their account
+    const meta = currentUserMeta || {};
+    const preName = meta.full_name || meta.display_name || '';
+    const preContact = meta.phone || currentUserEmail || '';
+    const roleMap = { owner: 'owner', manager: 'manager', representative: 'other', employee: 'employee' };
+    const preRole = roleMap[meta.owner_role] || 'owner';
+
+    const typeOptions = '<option value="">Select business type…</option>' +
+      CLAIM_TYPES.map(t => `<option value="${t[0]}" data-reg="${t[2] ? '1' : '0'}">${escapeHtml(t[1])}</option>`).join('');
+
+    const triggerText = isDispute ? 'Is this actually your business? Tell us' : '🏷️ Is this your business? Claim it';
+    const intro = isDispute
+      ? `<p class="claim-intro">This listing already has an owner on MeNim Ghana. If you believe it is really yours, send your details and a document. The current owner keeps access while our team reviews both sides. Nothing changes publicly until we decide.</p>`
+      : `<p class="claim-intro">Tell us about the business and upload a document that shows it is yours. Only our review team can open it.</p>`;
+
     section.innerHTML = `
-      <button type="button" class="claim-cta-link" id="claimTriggerBtn">🏷️ Is this your business? Claim it</button>
+      <button type="button" class="claim-cta-link${isDispute ? ' claim-cta-quiet' : ''}" id="claimTriggerBtn" aria-expanded="false">${triggerText}</button>
       <div class="claim-form-wrap quote-form-wrap" id="claimFormWrap" style="display:none; margin-top:10px;">
-        <input type="text" id="claimName" placeholder="Your full name">
+        ${intro}
+        <label class="claim-label" for="claimName">Your full name</label>
+        <input type="text" id="claimName" autocomplete="name" maxlength="120">
+        <label class="claim-label" for="claimRole">Your role</label>
         <select id="claimRole">
           <option value="owner">Owner</option>
           <option value="manager">Manager</option>
           <option value="employee">Employee</option>
-          <option value="other">Other</option>
+          <option value="other">Other (for example, a representative)</option>
         </select>
-        <input type="text" id="claimContact" placeholder="Best phone or email to reach you">
-        <textarea id="claimMessage" rows="2" placeholder="Anything that helps us verify this is your business (optional)"></textarea>
-        <button type="button" class="cta-quote-big" id="claimSubmitBtn">Submit claim request</button>
-        <div id="claimResultMsg" style="display:none; font-size:13px; margin-top:6px;"></div>
+        <label class="claim-label" for="claimContact">Best phone or email to reach you</label>
+        <input type="text" id="claimContact" autocomplete="off" maxlength="160">
+        <label class="claim-label" for="claimType">Type of business</label>
+        <select id="claimType">${typeOptions}</select>
+        <div id="claimRegWrap" style="display:none;">
+          <label class="claim-label" for="claimReg">Registration number</label>
+          <input type="text" id="claimReg" autocomplete="off" maxlength="40" placeholder="As shown on your registration certificate">
+        </div>
+        <label class="claim-label" for="claimFile">Supporting document</label>
+        <input type="file" id="claimFile" accept="application/pdf,image/jpeg,image/png,image/webp">
+        <p class="claim-hint">PDF, JPG, PNG or WebP, up to 5 MB. For example: a registration or business-name certificate, a trading licence, or a recent utility bill in the business name. If the business isn't registered, a utility bill or a photo of the shopfront works. Please don't send documents you don't need to, such as a full ID card.</p>
+        <label class="claim-label" for="claimMessage">Anything else that helps us verify (optional)</label>
+        <textarea id="claimMessage" rows="2" maxlength="600"></textarea>
+        <p class="claim-hint">Your document is stored privately and used only to check this claim. See our <a href="PrivacyPolicy.html">Privacy Policy</a>.</p>
+        <button type="button" class="cta-quote-big" id="claimSubmitBtn">${isDispute ? 'Submit ownership request' : 'Submit claim request'}</button>
+        <div id="claimResultMsg" role="status" style="display:none; font-size:13px; margin-top:6px;"></div>
       </div>
     `;
 
-    document.getElementById('claimTriggerBtn').addEventListener('click', () => {
-      const wrap = document.getElementById('claimFormWrap');
-      wrap.style.display = wrap.style.display === 'none' ? 'flex' : 'none';
-      wrap.style.flexDirection = 'column';
+    document.getElementById('claimName').value = preName;
+    document.getElementById('claimContact').value = preContact;
+    document.getElementById('claimRole').value = preRole;
+
+    const typeSel = document.getElementById('claimType');
+    typeSel.addEventListener('change', () => {
+      const opt = typeSel.options[typeSel.selectedIndex];
+      document.getElementById('claimRegWrap').style.display = (opt && opt.dataset.reg === '1') ? '' : 'none';
     });
 
-    document.getElementById('claimSubmitBtn').addEventListener('click', async () => {
+    document.getElementById('claimTriggerBtn').addEventListener('click', (e) => {
+      const wrap = document.getElementById('claimFormWrap');
+      const open = wrap.style.display === 'none';
+      wrap.style.display = open ? 'flex' : 'none';
+      wrap.style.flexDirection = 'column';
+      e.currentTarget.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    const submitBtn = document.getElementById('claimSubmitBtn');
+    const resultMsg = document.getElementById('claimResultMsg');
+    function claimFail(text) {
+      resultMsg.style.display = 'block';
+      resultMsg.style.color = 'var(--brand-red)';
+      resultMsg.textContent = text;
+    }
+
+    submitBtn.addEventListener('click', async () => {
       const name = document.getElementById('claimName').value.trim();
       const role = document.getElementById('claimRole').value;
       const contact = document.getElementById('claimContact').value.trim();
+      const bizType = typeSel.value;
+      const regNeeded = !!(typeSel.options[typeSel.selectedIndex] && typeSel.options[typeSel.selectedIndex].dataset.reg === '1');
+      const regNumber = document.getElementById('claimReg').value.trim();
       const message = document.getElementById('claimMessage').value.trim();
-      const resultMsg = document.getElementById('claimResultMsg');
+      const file = document.getElementById('claimFile').files[0];
 
-      if (!name || !contact) {
-        resultMsg.style.display = 'block';
-        resultMsg.style.color = 'var(--brand-red)';
-        resultMsg.textContent = 'Please fill in your name and a way to reach you.';
-        return;
+      if (!name || !contact) return claimFail('Please fill in your name and a way to reach you.');
+      if (!bizType) return claimFail('Please choose the type of business.');
+      if (regNeeded && regNumber.length < 2) return claimFail('Please enter the registration number for this business.');
+      if (!file) return claimFail('Please upload a document that shows you are connected to this business.');
+      if (!CLAIM_FILE_TYPES[file.type]) return claimFail('That file type is not supported. Please upload a PDF, JPG, PNG or WebP file.');
+      if (file.size > CLAIM_MAX_BYTES) return claimFail('That file is larger than 5 MB. Please upload a smaller one.');
+
+      submitBtn.disabled = true;
+      resultMsg.style.display = 'block';
+      resultMsg.style.color = 'var(--gray-600)';
+      resultMsg.textContent = 'Uploading your document…';
+
+      const path = currentUserId + '/' + biz.id + '-' + Date.now() + '.' + CLAIM_FILE_TYPES[file.type];
+      const up = await window.sbClient.storage.from('claim-evidence').upload(path, file, { contentType: file.type, upsert: false });
+      if (up.error) {
+        submitBtn.disabled = false;
+        return claimFail("We couldn't upload your document. Please check your connection and try again.");
       }
 
+      resultMsg.textContent = 'Sending your request…';
       const { data: inserted, error } = await window.sbClient
         .from('claim_requests')
         .insert({
@@ -1818,29 +1927,35 @@
           claimant_role: role,
           contact_info: contact,
           message: message || null,
+          business_type: bizType,
+          registration_number: regNeeded ? regNumber : null,
+          evidence_path: path,
+          evidence_name: file.name.slice(0, 200),
         })
-        .select()
+        .select('status, is_dispute')
         .single();
 
-      resultMsg.style.display = 'block';
       if (error) {
-        resultMsg.style.color = 'var(--brand-red)';
-        resultMsg.textContent = "Couldn't submit your claim request right now. Please try again later.";
-        return;
+        // don't leave an orphaned document behind
+        try { await window.sbClient.storage.from('claim-evidence').remove([path]); } catch (e) { /* ignore */ }
+        submitBtn.disabled = false;
+        if (error.code === 'P0001' && error.message) return claimFail(error.message);
+        if (error.code === '23505') return claimFail('You have already sent a request for this listing.');
+        return claimFail("Couldn't submit your request right now. Please try again later.");
       }
 
-      document.getElementById('claimName').style.display = 'none';
-      document.getElementById('claimRole').style.display = 'none';
-      document.getElementById('claimContact').style.display = 'none';
-      document.getElementById('claimMessage').style.display = 'none';
-      document.getElementById('claimSubmitBtn').style.display = 'none';
+      ['claimName', 'claimRole', 'claimContact', 'claimType', 'claimFile', 'claimMessage', 'claimSubmitBtn'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.style.display = 'none';
+      });
+      document.getElementById('claimRegWrap').style.display = 'none';
+      document.querySelectorAll('#claimFormWrap .claim-label, #claimFormWrap .claim-hint, #claimFormWrap .claim-intro').forEach(el => { el.style.display = 'none'; });
 
       if (inserted.status === 'approved') {
         resultMsg.style.color = 'var(--brand-green)';
-        resultMsg.textContent = '✅ Verified automatically — you now manage this business!';
+        resultMsg.textContent = '✅ Verified automatically. You now manage this business!';
       } else {
-        resultMsg.style.color = 'var(--gray-600)';
-        resultMsg.textContent = '⏳ Thanks — your claim request has been submitted and is pending review.';
+        resultMsg.style.color = 'var(--gray-700)';
+        resultMsg.textContent = '⏳ Thanks. Your request and document have been sent for review. We will contact you using the details you gave. You can follow it on your Profile page.';
       }
     });
   }

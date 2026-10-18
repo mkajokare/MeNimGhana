@@ -1132,7 +1132,7 @@
         window.sbClient.from('saved_businesses').select('created_at, businesses(id, name)').eq('user_id', uid),
         window.sbClient.from('businesses').select('*').eq('claimed_by', uid),
         window.sbClient.from('reviews').select('id, business_id, rating, review_text, status, created_at, businesses(name)').eq('user_id', uid),
-        window.sbClient.from('claim_requests').select('id, business_id, claimant_name, claimant_role, contact_info, message, status, created_at, businesses(name)').eq('user_id', uid),
+        window.sbClient.from('claim_requests').select('id, business_id, claimant_name, claimant_role, contact_info, message, status, created_at, business_type, registration_number, evidence_name, is_dispute, decision_note, businesses(name)').eq('user_id', uid),
       ]);
       const failed = [saved, listings, reviews, claims].find(r => r.error);
       if (failed) throw new Error(failed.error.message);
@@ -1179,6 +1179,13 @@
     const btn = document.getElementById('btnDeleteAccount');
     btn.disabled = true;
     try {
+      // Remove any ownership-claim documents this person uploaded. Storage files are not
+      // removed by deleting the account, so do it first. Best effort: it must never block deletion.
+      try {
+        const docs = window.sbClient.storage.from('claim-evidence');
+        const { data: files } = await docs.list(currentUser.id, { limit: 100 });
+        if (files && files.length) await docs.remove(files.map(f => currentUser.id + '/' + f.name));
+      } catch (e) { /* ignore */ }
       const { error } = await window.sbClient.rpc('delete_my_account');
       if (error) {
         const m = error.message || '';
@@ -1595,7 +1602,7 @@
         .order('created_at', { ascending: false }),
       window.sbClient
         .from('claim_requests')
-        .select('id, status, created_at, businesses(name)')
+        .select('id, status, created_at, is_dispute, decision_note, businesses(name)')
         .eq('user_id', uid)
         .order('created_at', { ascending: false }),
     ]);
@@ -1775,11 +1782,12 @@
       })),
       ...claims.map(c => ({
         time: c.created_at, icon: '🏪', wrap: c.status === 'approved' ? 'green' : (c.status === 'rejected' ? 'red' : 'gold'),
-        text: c.status === 'approved'
-          ? `Your claim on <strong>${escapeHtml(c.businesses?.name || 'a business')}</strong> was approved`
+        text: (c.status === 'approved'
+          ? `Your ${c.is_dispute ? 'ownership request' : 'claim'} on <strong>${escapeHtml(c.businesses?.name || 'a business')}</strong> was approved`
           : c.status === 'rejected'
-            ? `Your claim on <strong>${escapeHtml(c.businesses?.name || 'a business')}</strong> wasn't approved`
-            : `You requested to claim <strong>${escapeHtml(c.businesses?.name || 'a business')}</strong>`,
+            ? `Your ${c.is_dispute ? 'ownership request' : 'claim'} on <strong>${escapeHtml(c.businesses?.name || 'a business')}</strong> wasn't approved`
+            : `You ${c.is_dispute ? 'asked for ownership of' : 'requested to claim'} <strong>${escapeHtml(c.businesses?.name || 'a business')}</strong>. We're reviewing it`)
+          + (c.decision_note ? `. Reviewer note: ${escapeHtml(c.decision_note)}` : ''),
       })),
     ].sort((a, b) => new Date(b.time) - new Date(a.time));
 

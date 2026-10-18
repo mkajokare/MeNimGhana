@@ -58,6 +58,13 @@
   .status-pill-active { background: var(--brand-green-light); color: var(--brand-green); }
   .status-pill-pending { background: var(--brand-gold-light); color: #92680A; }
   .status-pill-rejected { background: var(--gray-100); color: var(--gray-500); }
+  .status-pill-dispute { background: #FDECEA; color: #B3261E; }
+  .admin-hint { font-size: 13px; color: var(--gray-600); margin: -4px 0 12px; }
+  .dm-note-box { width: 100%; border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 9px 11px; font-family: inherit; font-size: 14px; resize: vertical; }
+  .dm-inline-btn { font-family: inherit; font-size: 13px; font-weight: 700; border-radius: var(--radius-md); padding: 7px 12px; cursor: pointer; border: 1px solid var(--gray-200); background: var(--gray-50); color: var(--gray-700); margin: 0 8px 4px 0; }
+  .dm-inline-btn.danger { color: #B3261E; border-color: #F2C6C2; background: #fff; }
+  .dm-inline-btn:disabled { opacity: 0.5; cursor: default; }
+  .dm-warn { background: #FDECEA; color: #8C1D18; border-radius: var(--radius-md); padding: 10px 12px; font-size: 13px; line-height: 1.5; }
   .admin-card-actions button:disabled { opacity: 0.5; cursor: default; }
 
   .empty-state { font-size: 13px; color: var(--gray-400); padding: 8px 2px; }
@@ -169,6 +176,11 @@
   <section class="admin-section">
     <h2>Pending claim requests <span class="count-badge" id="pendingClaimCount">0</span></h2>
     <div id="pendingClaimList"></div>
+  </section>
+  <section class="admin-section">
+    <h2>Recently decided claims <span class="count-badge" id="decidedClaimCount">0</span></h2>
+    <p class="admin-hint">Open a claim to see its document. Once a claim is settled, delete the document so it isn't kept longer than needed.</p>
+    <div id="decidedClaimList"></div>
   </section>
   <section class="admin-section">
     <h2>All businesses <span class="count-badge" id="allBizCount">0</span></h2>
@@ -426,17 +438,39 @@
     return { kicker: 'Flagged review', title: (r.reviewer_name || 'Reviewer') + ' on ' + ((r.businesses && r.businesses.name) || 'a business'), body, actions };
   }
 
+  const CLAIM_TYPE_LABELS = {
+    sole_proprietor: 'Sole proprietorship (business name registered)', partnership: 'Partnership',
+    private_company: 'Private limited company (Ltd)', public_company: 'Public limited company (PLC)',
+    nonprofit: 'Non-profit / NGO (company limited by guarantee)', foreign_branch: 'Branch of a foreign company',
+    not_registered: 'Not registered yet', not_sure: 'Not sure'
+  };
+
   function dmClaim(c) {
-    const known = ['id', 'business_id', 'user_id', 'claimant_name', 'claimant_role', 'contact_info', 'message', 'status', 'created_at', 'reviewed_at'];
+    const known = ['id', 'business_id', 'user_id', 'claimant_name', 'claimant_role', 'contact_info', 'message', 'status', 'created_at', 'reviewed_at',
+      'business_type', 'registration_number', 'evidence_path', 'evidence_name', 'is_dispute', 'decision_note'];
+    const pending = c.status === 'pending';
+    const dispute = c.is_dispute
+      ? `<div class="dm-warn"><strong>Ownership dispute.</strong> This listing already has an owner (account ID ${escapeHtml((c.businesses && c.businesses.claimed_by) || 'unknown')}). The current owner keeps access until you decide. Approving this request moves the listing to this claimant and ends the current owner's access.</div>` : '';
+    const evidence = c.evidence_path
+      ? `<div class="dm-v"><button type="button" class="dm-inline-btn" data-evidence-view="${escapeHtml(c.id)}">Open document</button>` +
+        (pending ? '' : `<button type="button" class="dm-inline-btn danger" data-evidence-delete="${escapeHtml(c.id)}">Delete document</button>`) +
+        `<div class="dm-na" style="margin-top:2px;">${escapeHtml(c.evidence_name || 'document')}${pending ? ' · you can delete it after you decide' : ''}</div><div id="dmEvidenceMsg" class="dm-na" role="status"></div></div>`
+      : `<div class="dm-v dm-na">${pending ? 'No document attached' : 'No document kept'}</div>`;
     const body =
+      (dispute ? dmSec('Dispute', dispute) : '') +
       dmSec('Claim request', dmRow('Business', c.businesses && c.businesses.name, 'text', true) + dmRow('Claimant', c.claimant_name, 'text', true) +
         dmRow('Role', c.claimant_role, 'text', true) + dmRow('Contact', c.contact_info, 'text', true) + dmRow('Message', c.message, 'text', true) +
-        dmRow('Status', c.status, 'text') + dmRow('Submitted', c.created_at, 'date') + dmRow('Reviewed', c.reviewed_at, 'date')) +
+        dmRow('Status', c.status, 'text') + dmRow('Submitted', c.created_at, 'date') + dmRow('Reviewed', c.reviewed_at, 'date') +
+        dmRow('Decision note', c.decision_note, 'text')) +
+      dmSec('Business details given', dmRow('Business type', CLAIM_TYPE_LABELS[c.business_type] || c.business_type, 'text', true) +
+        dmRow('Registration number', c.registration_number, 'text', CLAIM_TYPE_LABELS[c.business_type] && !/^(Not )/.test(CLAIM_TYPE_LABELS[c.business_type]))) +
+      dmSec('Supporting document', `<div class="dm-row"><div class="dm-k">Document</div>${evidence}</div>`) +
+      (pending ? dmSec('Your decision', `<label class="dm-k" for="dmDecisionNote" style="display:block;margin-bottom:4px;">Note to the claimant (optional). They will see this on their claim.</label><textarea id="dmDecisionNote" class="dm-note-box" rows="2" maxlength="500"></textarea>`) : '') +
       dmSec('Other details', dmOther(c, known)) +
       dmSec('Reference', dmRow('Claim ID', c.id, 'text') + dmRow('Claimant account ID', c.user_id, 'text') + dmRow('Business ID', c.business_id, 'text'));
-    const actions = c.status === 'pending'
-      ? `<button class="btn-approve" data-action="approve-claim" data-id="${escapeHtml(c.id)}">Approve</button><button class="btn-reject" data-action="reject-claim" data-id="${escapeHtml(c.id)}">Reject</button>` : '';
-    return { kicker: 'Claim request', title: (c.claimant_name || 'Claimant') + ' claiming ' + ((c.businesses && c.businesses.name) || 'a business'), body, actions };
+    const actions = pending
+      ? `<button class="btn-approve" data-action="approve-claim" data-id="${escapeHtml(c.id)}">${c.is_dispute ? 'Approve and transfer' : 'Approve'}</button><button class="btn-reject" data-action="reject-claim" data-id="${escapeHtml(c.id)}">Reject</button>` : '';
+    return { kicker: c.is_dispute ? 'Ownership dispute' : 'Claim request', title: (c.claimant_name || 'Claimant') + ' claiming ' + ((c.businesses && c.businesses.name) || 'a business'), body, actions };
   }
 
   function dmPost(p) {
@@ -568,22 +602,42 @@
   async function loadPendingClaims() {
     const list = document.getElementById('pendingClaimList');
     const countEl = document.getElementById('pendingClaimCount');
-    const { data, error } = await window.sbClient.from('claim_requests').select('*, businesses(name)').eq('status', 'pending').order('created_at', { ascending: false });
+    const { data, error } = await window.sbClient.from('claim_requests').select('*, businesses(name, claimed_by)').eq('status', 'pending').order('created_at', { ascending: false });
     if (error) { list.innerHTML = '<p class="admin-error">Could not load claim requests.</p>'; return; }
     countEl.textContent = (data || []).length;
-    cacheRows('claim', data);
+    cacheRows('claim', data, true);
     if (!data || !data.length) { list.innerHTML = '<p class="empty-state">No pending claim requests.</p>'; return; }
     list.innerHTML = data.map(c => `
       <div class="admin-card" data-id="${c.id}">
         <div class="admin-card-main" data-view="claim" data-id="${c.id}">
-          <div class="admin-card-title">${escapeHtml(c.claimant_name)} (${escapeHtml(c.claimant_role)}) claiming ${escapeHtml(c.businesses?.name || 'a business')}</div>
-          <div class="admin-card-meta">Contact: ${escapeHtml(c.contact_info)} · ${timeAgo(c.created_at)}</div>
+          <div class="admin-card-title">${escapeHtml(c.claimant_name)} (${escapeHtml(c.claimant_role)}) claiming ${escapeHtml(c.businesses?.name || 'a business')}${c.is_dispute ? ' <span class="status-pill status-pill-dispute">Dispute</span>' : ''}</div>
+          <div class="admin-card-meta">Contact: ${escapeHtml(c.contact_info)} · ${escapeHtml(CLAIM_TYPE_LABELS[c.business_type] || 'Type not given')}${c.registration_number ? ' · Reg. ' + escapeHtml(c.registration_number) : ''} · ${c.evidence_path ? 'Document attached' : 'No document'} · ${timeAgo(c.created_at)}</div>
           ${c.message ? `<div class="admin-card-desc">${escapeHtml(c.message)}</div>` : ''}
         </div>
         <div class="admin-card-actions">
           <button class="btn-neutral" style="border-radius:var(--radius-md);" data-view="claim" data-id="${c.id}">View details</button>
           <button class="btn-approve" data-action="approve-claim" data-id="${c.id}">Approve</button>
           <button class="btn-reject" data-action="reject-claim" data-id="${c.id}">Reject</button>
+        </div>
+      </div>`).join('');
+  }
+
+  async function loadDecidedClaims() {
+    const list = document.getElementById('decidedClaimList');
+    const countEl = document.getElementById('decidedClaimCount');
+    const { data, error } = await window.sbClient.from('claim_requests').select('*, businesses(name, claimed_by)').neq('status', 'pending').order('reviewed_at', { ascending: false, nullsFirst: false }).limit(30);
+    if (error) { list.innerHTML = '<p class="admin-error">Could not load decided claims.</p>'; return; }
+    countEl.textContent = (data || []).length;
+    cacheRows('claim', data, true);
+    if (!data || !data.length) { list.innerHTML = '<p class="empty-state">No decided claims yet.</p>'; return; }
+    list.innerHTML = data.map(c => `
+      <div class="admin-card" data-id="${c.id}">
+        <div class="admin-card-main" data-view="claim" data-id="${c.id}">
+          <div class="admin-card-title">${escapeHtml(c.claimant_name)} · ${escapeHtml(c.businesses?.name || 'a business')} <span class="status-pill ${c.status === 'approved' ? 'status-pill-active' : 'status-pill-rejected'}">${c.status === 'approved' ? 'Approved' : 'Rejected'}</span>${c.is_dispute ? ' <span class="status-pill status-pill-dispute">Dispute</span>' : ''}</div>
+          <div class="admin-card-meta">${c.reviewed_at ? 'Decided ' + timeAgo(c.reviewed_at) : 'Decided'} · ${c.evidence_path ? 'Document still stored' : 'No document kept'}</div>
+        </div>
+        <div class="admin-card-actions">
+          <button class="btn-neutral" style="border-radius:var(--radius-md);" data-view="claim" data-id="${c.id}">View details</button>
         </div>
       </div>`).join('');
   }
@@ -807,6 +861,35 @@
   });
 
   document.addEventListener('click', async function (e) {
+    const viewBtn = e.target.closest('button[data-evidence-view]');
+    const delBtn = e.target.closest('button[data-evidence-delete]');
+    if (!viewBtn && !delBtn) return;
+    const claim = detailCache.claim[(viewBtn || delBtn).dataset.evidenceView || (viewBtn || delBtn).dataset.evidenceDelete];
+    const msg = document.getElementById('dmEvidenceMsg');
+    const say = t => { if (msg) msg.textContent = t; };
+    if (!claim || !claim.evidence_path) { say('No document found.'); return; }
+    const bucket = window.sbClient.storage.from('claim-evidence');
+    if (viewBtn) {
+      // open the tab first (a popup blocker allows it inside the click), then point it at a short-lived link
+      const tab = window.open('', '_blank');
+      const { data, error } = await bucket.createSignedUrl(claim.evidence_path, 120);
+      if (error || !data || !data.signedUrl) { if (tab) tab.close(); say('Could not open the document.'); return; }
+      if (tab) { tab.opener = null; tab.location.href = data.signedUrl; } else { say('Your browser blocked the new tab. Allow pop-ups for this page and try again.'); }
+      return;
+    }
+    if (claim.status === 'pending') { say('Decide the claim first.'); return; }
+    if (!confirm('Permanently delete this document? This cannot be undone.')) return;
+    delBtn.disabled = true;
+    const rm = await bucket.remove([claim.evidence_path]);
+    // Storage reports success with an empty list when it was not allowed to delete anything, so check for that too.
+    if (rm.error || !rm.data || !rm.data.length) { say('Could not delete the document.'); delBtn.disabled = false; return; }
+    const { error: clrErr } = await window.sbClient.rpc('admin_clear_claim_evidence', { p_claim_id: claim.id });
+    if (clrErr) { say('The file was deleted, but the record could not be updated: ' + (clrErr.message || 'error')); return; }
+    say('Document deleted.');
+    await loadDecidedClaims();
+  });
+
+  document.addEventListener('click', async function (e) {
     const btn = e.target.closest('button[data-action]');
     if (!btn) return;
     const action = btn.dataset.action;
@@ -835,14 +918,20 @@
       return;
     }
 
+    // The decision note exists only in the open claim pop-up; read it before anything is awaited.
+    const noteEl = btn.closest('#dmFoot') ? document.getElementById('dmDecisionNote') : null;
+    const claimNote = noteEl ? noteEl.value.trim() : null;
+
     btn.disabled = true;
     try {
       if (action === 'approve-biz') await window.sbClient.rpc('admin_set_business_status', { p_business_id: id, p_status: 'active' });
       else if (action === 'reject-biz') await window.sbClient.rpc('admin_set_business_status', { p_business_id: id, p_status: 'rejected' });
       else if (action === 'publish-review') await window.sbClient.rpc('admin_resolve_review', { p_review_id: id, p_status: 'published' });
       else if (action === 'remove-review') await window.sbClient.rpc('admin_resolve_review', { p_review_id: id, p_status: 'removed' });
-      else if (action === 'approve-claim') await window.sbClient.rpc('admin_resolve_claim', { p_claim_id: id, p_approve: true });
-      else if (action === 'reject-claim') await window.sbClient.rpc('admin_resolve_claim', { p_claim_id: id, p_approve: false });
+      else if (action === 'approve-claim' || action === 'reject-claim') {
+        const { error: claimErr } = await window.sbClient.rpc('admin_resolve_claim', { p_claim_id: id, p_approve: action === 'approve-claim', p_note: claimNote || null });
+        if (claimErr) throw claimErr;
+      }
       else if (action === 'toggle-verified') await window.sbClient.rpc('admin_set_verified', { p_business_id: id, p_verified: btn.dataset.verified !== 'true' });
       else if (action === 'toggle-sponsored') await window.sbClient.rpc('admin_set_sponsored', { p_business_id: id, p_sponsored: btn.dataset.sponsored !== 'true' });
       else if (action === 'toggle-post-status') await window.sbClient.rpc('admin_set_blog_post_status', { p_post_id: id, p_status: btn.dataset.status === 'published' ? 'draft' : 'published' });
@@ -852,7 +941,7 @@
       if (action === 'toggle-verified' || action === 'toggle-sponsored') await loadAllBusinesses();
       else if (action.includes('biz')) await Promise.all([loadPendingBusinesses(), loadAllBusinesses()]);
       else if (action.includes('review')) await loadFlaggedReviews();
-      else if (action.includes('claim')) await loadPendingClaims();
+      else if (action.includes('claim')) await Promise.all([loadPendingClaims(), loadDecidedClaims()]);
       else if (action.includes('post')) await loadBlogPosts();
       else if (action.includes('deal')) await loadDeals();
     } catch (err) {
@@ -884,7 +973,7 @@
     }
 
     adminMain.style.display = 'block';
-    await Promise.all([loadPendingBusinesses(), loadFlaggedReviews(), loadPendingClaims(), loadAllBusinesses(), loadBlogPosts(), loadDeals(), loadAdmins()]);
+    await Promise.all([loadPendingBusinesses(), loadFlaggedReviews(), loadPendingClaims(), loadDecidedClaims(), loadAllBusinesses(), loadBlogPosts(), loadDeals(), loadAdmins()]);
   }
 
   document.addEventListener('DOMContentLoaded', checkAdminAndLoad);
