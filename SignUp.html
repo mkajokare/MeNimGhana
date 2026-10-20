@@ -88,7 +88,34 @@
   .password-requirements li.met { color: var(--brand-green); }
   .password-requirements li.met::before { content: "✓"; color: var(--brand-green); font-weight: 700; }
 
-  .form-checkbox { display: flex; align-items: center; gap: 6px; margin-bottom: 24px; font-size: 13px; color: var(--gray-600); }
+  .form-checkbox { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 14px; font-size: 13px; color: var(--gray-600); line-height: 1.45; }
+  .form-checkbox input { margin-top: 2px; flex-shrink: 0; }
+  .form-checkbox.last { margin-bottom: 24px; }
+  [hidden] { display: none !important; }
+  .req { color: var(--brand-red); font-weight: 700; margin-left: 2px; }
+  .opt { color: var(--gray-400); }
+  .req-note { font-size: 12px; color: var(--gray-600); margin: -12px 0 16px; }
+  .name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .name-row .form-group { min-width: 0; }
+  @media (max-width: 460px) { .name-row { grid-template-columns: 1fr; gap: 0; } }
+  .terms-error { display: none; font-size: 12px; color: var(--brand-red); margin: -8px 0 14px; }
+  .terms-error.show { display: block; }
+  .verify-text { font-size: 14px; color: var(--gray-700); line-height: 1.55; text-align: center; margin-bottom: 20px; word-break: break-word; }
+  .verify-text strong { color: var(--gray-900); }
+  .code-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
+  .code-box { width: 46px; height: 54px; text-align: center; font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--gray-900); border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); background: var(--white); padding: 0; min-width: 0; }
+  .code-box:focus { outline: none; border-color: var(--brand-green); box-shadow: 0 0 0 3px rgba(0,107,63,0.12); }
+  .code-row.bad .code-box { border-color: var(--brand-red); }
+  .verify-msg { min-height: 20px; font-size: 13px; text-align: center; margin-bottom: 12px; color: var(--gray-600); }
+  .verify-msg.err { color: var(--brand-red); }
+  .verify-msg.ok { color: var(--brand-green); font-weight: 600; }
+  .resend-row { text-align: center; font-size: 13px; color: var(--gray-600); margin-top: 16px; }
+  .link-btn { background: none; border: none; padding: 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--brand-green); cursor: pointer; text-decoration: none; }
+  .link-btn:hover:not(:disabled) { text-decoration: underline; }
+  .link-btn:disabled { color: var(--gray-400); cursor: default; }
+  .verify-hint { font-size: 12px; color: var(--gray-400); text-align: center; margin-top: 14px; line-height: 1.5; }
+  .verify-back { text-align: center; margin-top: 10px; }
+  @media (max-width: 380px) { .code-row { gap: 6px; } .code-box { width: 40px; height: 50px; font-size: 20px; } }
   .form-checkbox input { accent-color: var(--brand-green); }
   .form-checkbox a { color: var(--brand-green); text-decoration: none; font-weight: 500; }
   .form-checkbox a:hover { text-decoration: underline; }
@@ -189,22 +216,30 @@
       <p class="auth-subtitle">Create an account to explore local businesses</p>
     </div>
 
-    <form id="signupForm">
-      <div class="form-group">
-        <label class="form-label" for="name">Full Name</label>
-        <input type="text" class="form-input" id="name" placeholder="e.g. Kwame Asante" required aria-describedby="name-error">
-        <span class="form-error" id="name-error">Full name is required</span>
+    <form id="signupForm" novalidate>
+      <p class="req-note"><span class="req" aria-hidden="true">*</span> Required</p>
+      <div class="name-row">
+        <div class="form-group">
+          <label class="form-label" for="firstName">First name<span class="req" aria-hidden="true">*</span></label>
+          <input type="text" class="form-input" id="firstName" placeholder="e.g. Kwame" autocomplete="given-name" maxlength="60" required aria-required="true" aria-describedby="firstName-error">
+          <span class="form-error" id="firstName-error">First name is required</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lastName">Last name<span class="req" aria-hidden="true">*</span></label>
+          <input type="text" class="form-input" id="lastName" placeholder="e.g. Asante" autocomplete="family-name" maxlength="60" required aria-required="true" aria-describedby="lastName-error">
+          <span class="form-error" id="lastName-error">Last name is required</span>
+        </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="email">Email</label>
-        <input type="email" class="form-input" id="email" placeholder="e.g. kwame@example.com" required aria-describedby="email-error">
+        <label class="form-label" for="email">Email<span class="req" aria-hidden="true">*</span></label>
+        <input type="email" class="form-input" id="email" placeholder="e.g. kwame@example.com" autocomplete="email" required aria-required="true" aria-describedby="email-error">
         <span class="form-error" id="email-error">Enter a valid email address, like name@example.com</span>
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="password">Password</label>
-        <input type="password" class="form-input" id="password" placeholder="Create a password" required aria-describedby="password-requirements password-error">
+        <label class="form-label" for="password">Password<span class="req" aria-hidden="true">*</span></label>
+        <input type="password" class="form-input" id="password" placeholder="Create a password" autocomplete="new-password" aria-required="true" required aria-describedby="password-requirements password-error">
         <ul class="password-requirements" id="password-requirements">
           <li data-rule="length">At least 8 characters</li>
           <li data-rule="upper">One uppercase letter (A-Z)</li>
@@ -215,27 +250,33 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="confirmPassword">Confirm Password</label>
-        <input type="password" class="form-input" id="confirmPassword" placeholder="Re-enter your password" required aria-describedby="confirm-password-error">
+        <label class="form-label" for="confirmPassword">Confirm password<span class="req" aria-hidden="true">*</span></label>
+        <input type="password" class="form-input" id="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password" aria-required="true" required aria-describedby="confirm-password-error">
         <span class="form-error" id="confirm-password-error">Passwords do not match</span>
       </div>
 
       <label class="form-checkbox">
-        <input type="checkbox" id="terms" required>
-        <span>I agree to the <a href="TermsOfService.html">Terms of Service</a> and <a href="PrivacyPolicy.html">Privacy Policy</a></span>
+        <input type="checkbox" id="terms" aria-required="true" aria-describedby="terms-error">
+        <span>I agree to the <a href="TermsOfService.html">Terms of Service</a> and <a href="PrivacyPolicy.html">Privacy Policy</a><span class="req" aria-hidden="true">*</span></span>
+      </label>
+      <div class="terms-error" id="terms-error" role="alert">Please agree to the Terms of Service and Privacy Policy to create an account.</div>
+
+      <label class="form-checkbox last">
+        <input type="checkbox" id="marketing">
+        <span>Keep me updated by email on how MeNim Ghana can help you find products and services <span class="opt">(optional)</span></span>
       </label>
 
       <div id="signupCaptcha" class="sg-captcha"></div>
       <button type="submit" class="btn-signup">Create Account</button>
     </form>
 
-    <div class="auth-divider">
+    <div class="auth-divider" id="authDivider">
       <span></span>
       <span>or</span>
       <span></span>
     </div>
 
-    <div class="social-buttons">
+    <div class="social-buttons" id="socialButtons">
       <button type="button" class="social-btn" id="googleLoginBtn">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="flex-shrink:0;">
           <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
@@ -253,7 +294,25 @@
       </button>
     </div>
 
-    <div class="auth-footer">
+    <div id="verifyPanel" hidden>
+      <p class="verify-text" id="verifyText">We have sent an email containing a 6-digit verification code to <strong id="verifyEmail"></strong></p>
+      <div class="code-row" id="codeRow" role="group" aria-label="6-digit verification code">
+        <input class="code-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" aria-label="Digit 1 of 6">
+        <input class="code-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Digit 2 of 6">
+        <input class="code-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Digit 3 of 6">
+        <input class="code-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Digit 4 of 6">
+        <input class="code-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Digit 5 of 6">
+        <input class="code-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Digit 6 of 6">
+      </div>
+      <div class="verify-msg" id="verifyMsg" role="status" aria-live="polite"></div>
+      <button type="button" class="btn-signup" id="verifyBtn" disabled>Verify email</button>
+      <div class="resend-row">Didn't get the email? <button type="button" class="link-btn" id="resendBtn">Send again</button></div>
+      <div id="resendCaptcha" class="sg-captcha" style="margin-top:12px;"></div>
+      <p class="verify-hint">Check your spam or junk folder too. If you asked for more than one code, use the newest email.</p>
+      <div class="verify-back"><button type="button" class="link-btn" id="changeEmailBtn">Wrong email? Go back</button></div>
+    </div>
+
+    <div class="auth-footer" id="authFooter">
       Already have an account? <a href="Login.html">Sign in</a>
     </div>
   </div>
@@ -355,13 +414,18 @@ function isValidEmail(email) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  const nameEl = document.getElementById('name');
+  const firstEl = document.getElementById('firstName');
+  const lastEl = document.getElementById('lastName');
   const emailEl = document.getElementById('email');
   const passwordEl = document.getElementById('password');
   const confirmEl = document.getElementById('confirmPassword');
+  const termsEl = document.getElementById('terms');
 
   // Live feedback as the user types, so errors clear the moment they're fixed
-  nameEl.addEventListener('input', function () { if (this.value.trim()) setFieldError(this, false); });
+  [firstEl, lastEl].forEach(function (el) {
+    el.addEventListener('input', function () { if (this.value.trim()) setFieldError(this, false); });
+    el.addEventListener('blur', function () { setFieldError(this, !this.value.trim()); });
+  });
   emailEl.addEventListener('input', function () { if (isValidEmail(this.value.trim())) setFieldError(this, false); });
   passwordEl.addEventListener('input', function () {
     const valid = updatePasswordRequirements(this.value);
@@ -371,27 +435,203 @@ document.addEventListener('DOMContentLoaded', function () {
   confirmEl.addEventListener('input', function () {
     setFieldError(this, this.value !== passwordEl.value);
   });
+  termsEl.addEventListener('change', function () { document.getElementById('terms-error').classList.toggle('show', !this.checked); });
 
   // Validate on blur too, so mistakes surface before the user reaches Submit
-  nameEl.addEventListener('blur', function () { setFieldError(this, !this.value.trim()); });
   emailEl.addEventListener('blur', function () { setFieldError(this, !isValidEmail(this.value.trim())); });
   passwordEl.addEventListener('blur', function () { setFieldError(this, !isPasswordValid(this.value)); });
   confirmEl.addEventListener('blur', function () { setFieldError(this, this.value !== passwordEl.value); });
 });
 
+/* ---------- Hide most of an email address: man************@out****.com ---------- */
+function maskEmail(email) {
+  const at = email.lastIndexOf('@');
+  if (at < 1) return email;
+  const local = email.slice(0, at);
+  const domain = email.slice(at + 1);
+  const localShow = Math.min(3, Math.max(1, local.length - 2));
+  const localMasked = local.slice(0, localShow) + '*'.repeat(Math.max(4, Math.min(12, local.length - localShow)));
+  const dot = domain.indexOf('.');
+  const dName = dot > 0 ? domain.slice(0, dot) : domain;
+  const dRest = dot > 0 ? domain.slice(dot) : '';
+  const dShow = dName.length <= 3 ? 1 : 3;
+  const domainMasked = dName.slice(0, dShow) + '*'.repeat(Math.max(3, Math.min(6, dName.length - dShow))) + dRest;
+  return localMasked + '@' + domainMasked;
+}
+
+/* ---------- 6-digit code screen ---------- */
+const verify = { email: '', timer: null, busy: false };
+
+function codeBoxes() { return Array.prototype.slice.call(document.querySelectorAll('#codeRow .code-box')); }
+function currentCode() { return codeBoxes().map(function (b) { return b.value; }).join(''); }
+function setVerifyMsg(text, kind) {
+  const el = document.getElementById('verifyMsg');
+  el.textContent = text || '';
+  el.className = 'verify-msg' + (kind ? ' ' + kind : '');
+  document.getElementById('codeRow').classList.toggle('bad', kind === 'err');
+}
+function clearCode(focus) {
+  codeBoxes().forEach(function (b) { b.value = ''; });
+  document.getElementById('verifyBtn').disabled = true;
+  if (focus) codeBoxes()[0].focus();
+}
+
+function startResendCooldown(seconds) {
+  const btn = document.getElementById('resendBtn');
+  clearInterval(verify.timer);
+  let left = seconds;
+  btn.disabled = true;
+  btn.textContent = 'Send again in ' + left + 's';
+  verify.timer = setInterval(function () {
+    left -= 1;
+    if (left <= 0) { clearInterval(verify.timer); btn.disabled = false; btn.textContent = 'Send again'; }
+    else btn.textContent = 'Send again in ' + left + 's';
+  }, 1000);
+}
+
+function showVerifyPanel(email) {
+  verify.email = email;
+  document.getElementById('verifyEmail').textContent = maskEmail(email);
+  document.getElementById('signupForm').hidden = true;
+  document.getElementById('authDivider').hidden = true;
+  document.getElementById('socialButtons').hidden = true;
+  document.getElementById('authFooter').hidden = true;
+  document.querySelector('.auth-title').textContent = 'Check your email';
+  document.querySelector('.auth-subtitle').textContent = 'One more step to finish creating your account';
+  document.getElementById('verifyPanel').hidden = false;
+  clearCode(true);
+  setVerifyMsg('');
+  startResendCooldown(60);
+  // the single Turnstile widget moves here so "Send again" can use it
+  if (window.sgCaptcha) sgCaptcha.mount('#resendCaptcha');
+}
+
+function showSignupForm() {
+  clearInterval(verify.timer);
+  document.getElementById('verifyPanel').hidden = true;
+  document.getElementById('signupForm').hidden = false;
+  document.getElementById('authDivider').hidden = false;
+  document.getElementById('socialButtons').hidden = false;
+  document.getElementById('authFooter').hidden = false;
+  document.querySelector('.auth-title').textContent = 'Join MeNim Ghana';
+  document.querySelector('.auth-subtitle').textContent = 'Create an account to explore local businesses';
+  document.getElementById('resendCaptcha').textContent = '';
+  if (window.sgCaptcha) sgCaptcha.mount('#signupCaptcha');
+}
+
+async function submitCode() {
+  if (verify.busy) return;
+  const code = currentCode();
+  if (!/^\d{6}$/.test(code)) return;
+  verify.busy = true;
+  const btn = document.getElementById('verifyBtn');
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+  setVerifyMsg('');
+  let result;
+  try {
+    result = await window.sbClient.auth.verifyOtp({ email: verify.email, token: code, type: 'signup' });
+  } catch (e) {
+    result = { error: { message: 'network' } };
+  }
+  verify.busy = false;
+  btn.textContent = 'Verify email';
+  if (result.error) {
+    const m = (result.error.message || '').toLowerCase();
+    if (result.error.status === 429 || m.indexOf('rate') !== -1 || m.indexOf('too many') !== -1) {
+      setVerifyMsg('Too many tries. Please wait a minute and try again.', 'err');
+    } else if (m === 'network' || m.indexOf('fetch') !== -1) {
+      setVerifyMsg("We couldn't reach the server. Check your connection and try again.", 'err');
+    } else {
+      setVerifyMsg("That code isn't right, or it has expired. Check the newest email, or tap Send again.", 'err');
+    }
+    clearCode(true);
+    return;
+  }
+  setVerifyMsg('Email verified. Taking you to the next step...', 'ok');
+  codeBoxes().forEach(function (b) { b.disabled = true; });
+  window.location.replace('Welcome.html');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const boxes = codeBoxes();
+  const verifyBtn = document.getElementById('verifyBtn');
+  function refresh() {
+    const full = /^\d{6}$/.test(currentCode());
+    verifyBtn.disabled = !full;
+    if (full) submitCode();
+  }
+  function fillFrom(startIndex, digits) {
+    const d = digits.replace(/\D/g, '').slice(0, 6 - startIndex);
+    for (let i = 0; i < d.length; i++) boxes[startIndex + i].value = d[i];
+    boxes[Math.min(startIndex + d.length, 5)].focus();
+    refresh();
+  }
+  boxes.forEach(function (box, i) {
+    box.addEventListener('input', function () {
+      const v = box.value.replace(/\D/g, '');
+      if (v.length > 1) { box.value = ''; fillFrom(i, v); return; }   // autofill or a paste that landed in one box
+      box.value = v;
+      if (v && i < 5) boxes[i + 1].focus();
+      setVerifyMsg('');
+      refresh();
+    });
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'Backspace' && !box.value && i > 0) { boxes[i - 1].focus(); boxes[i - 1].value = ''; verifyBtn.disabled = true; e.preventDefault(); }
+      else if (e.key === 'ArrowLeft' && i > 0) { boxes[i - 1].focus(); e.preventDefault(); }
+      else if (e.key === 'ArrowRight' && i < 5) { boxes[i + 1].focus(); e.preventDefault(); }
+    });
+    box.addEventListener('paste', function (e) {
+      const text = (e.clipboardData || window.clipboardData).getData('text') || '';
+      e.preventDefault();
+      fillFrom(i, text);
+    });
+    box.addEventListener('focus', function () { box.select(); });
+  });
+  verifyBtn.addEventListener('click', submitCode);
+  document.getElementById('changeEmailBtn').addEventListener('click', showSignupForm);
+
+  document.getElementById('resendBtn').addEventListener('click', async function () {
+    const btn = this;
+    btn.disabled = true;
+    setVerifyMsg('Sending a new code...');
+    const captchaToken = await sgCaptcha.token();
+    if (!captchaToken) { setVerifyMsg(window.sgCaptcha.failMessage, 'err'); btn.disabled = false; return; }
+    const { error } = await window.sbClient.auth.resend({
+      type: 'signup',
+      email: verify.email,
+      options: { captchaToken: captchaToken, emailRedirectTo: new URL('index.html', window.location.href).href }
+    });
+    sgCaptcha.reset();
+    if (error) {
+      const m = (error.message || '').toLowerCase();
+      setVerifyMsg(error.status === 429 || m.indexOf('rate') !== -1 || m.indexOf('seconds') !== -1
+        ? 'Please wait a little before asking for another code.' : "We couldn't send a new code. Please try again.", 'err');
+      btn.disabled = false;
+      return;
+    }
+    clearCode(true);
+    setVerifyMsg('A new code is on its way to ' + maskEmail(verify.email) + '.', 'ok');
+    startResendCooldown(60);
+  });
+});
+
 document.getElementById('signupForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  const name = document.getElementById('name').value.trim();
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
   const confirmPassword = document.getElementById('confirmPassword').value;
   const terms = document.getElementById('terms').checked;
+  const marketing = document.getElementById('marketing').checked;
   let isValid = true;
 
-  // Validate name
-  setFieldError(document.getElementById('name'), !name);
-  if (!name) isValid = false;
+  // Validate names
+  setFieldError(document.getElementById('firstName'), !firstName);
+  setFieldError(document.getElementById('lastName'), !lastName);
+  if (!firstName || !lastName) isValid = false;
 
   // Validate email
   const emailOk = email && isValidEmail(email);
@@ -405,52 +645,69 @@ document.getElementById('signupForm').addEventListener('submit', async function(
   if (!passwordOk) isValid = false;
 
   // Validate password match
-  const matchOk = password === confirmPassword;
+  const matchOk = password === confirmPassword && !!confirmPassword;
   setFieldError(document.getElementById('confirmPassword'), !matchOk);
   if (!matchOk) isValid = false;
 
-  // Validate terms
-  if (!terms) {
-    alert('You must agree to the Terms of Service');
-    isValid = false;
+  // Validate terms (the email-updates box is optional on purpose: consent to marketing must be a free choice)
+  document.getElementById('terms-error').classList.toggle('show', !terms);
+  if (!terms) isValid = false;
+
+  if (!isValid) {
+    const firstBad = document.querySelector('#signupForm .form-input.error');
+    if (firstBad) firstBad.focus();
+    else if (!terms) document.getElementById('terms').focus();
+    return;
   }
 
-  if (isValid) {
-    const submitBtn = document.querySelector('#signupForm button[type="submit"]');
-    const originalLabel = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Creating account...';
+  const submitBtn = document.querySelector('#signupForm button[type="submit"]');
+  const originalLabel = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Creating account...';
 
-    const captchaToken = await sgCaptcha.token();
-    if (!captchaToken) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalLabel;
-      alert(window.sgCaptcha.failMessage);
-      return;
-    }
-    const { data, error } = await window.sbClient.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        captchaToken: captchaToken,
-        data: { full_name: name },
-        // send the confirmation link back to this site's home page (works from the site root or a sub-path)
-        emailRedirectTo: new URL('index.html', window.location.href).href
-      }
-    });
-
-    sgCaptcha.reset();
+  const captchaToken = await sgCaptcha.token();
+  if (!captchaToken) {
     submitBtn.disabled = false;
     submitBtn.textContent = originalLabel;
-
-    if (error) {
-      alert('Could not create your account: ' + error.message);
-      return;
-    }
-
-    alert('Account created! Check your email to confirm it, then sign in.');
-    window.location.href = 'Login.html';
+    alert(window.sgCaptcha.failMessage);
+    return;
   }
+  const meta = {
+    first_name: firstName,
+    last_name: lastName,
+    full_name: firstName + ' ' + lastName,
+    marketing_opt_in: marketing
+  };
+  if (marketing) meta.marketing_opt_in_at = new Date().toISOString();
+  const { data, error } = await window.sbClient.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      captchaToken: captchaToken,
+      data: meta,
+      // the email carries a 6-digit code and also a link; the link comes back to this site's home page (works from the site root or a sub-path)
+      emailRedirectTo: new URL('index.html', window.location.href).href
+    }
+  });
+
+  sgCaptcha.reset();
+  submitBtn.disabled = false;
+  submitBtn.textContent = originalLabel;
+
+  if (error) {
+    alert('Could not create your account: ' + error.message);
+    return;
+  }
+
+  // Supabase answers "success" with no identities when the address already belongs to a confirmed account
+  if (data && data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+    alert('An account with this email already exists. Please sign in, or use "Forgot password" if you need to reset it.');
+    return;
+  }
+  // If email confirmation is switched off in Supabase, the person is already signed in
+  if (data && data.session) { window.location.replace('Welcome.html'); return; }
+
+  showVerifyPanel(email);
 });
 
 async function socialSignIn(provider, btn) {
