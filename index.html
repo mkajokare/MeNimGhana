@@ -351,6 +351,135 @@
   .hero .search-bar .search-btn{width:100%}
 }
 </style>
+<style id="home-refresh">
+/* Home page visual refresh: Ghana colours kept, one clear action colour per surface,
+   line icons instead of emoji, two-column hero, Kente-inspired band. */
+:root{--ink:#07140F;--paper:#FAF7EF;--line:#ECE7DA;--green-600:#006B3F;--green-500:#0A8A45;--tint-green:#E3F3EA;--tint-gold:#FFF3C2;--tint-red:#FCE6E9}
+@keyframes hrFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes hrFloat{0%,100%{transform:translateY(0) rotate(2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+
+/* ---------- Hero ---------- */
+.hero{background:var(--ink);
+  background-image:radial-gradient(55% 80% at 88% 18%,rgba(252,209,22,.16),transparent 62%),radial-gradient(70% 90% at 0% 100%,rgba(0,107,63,.55),transparent 62%),radial-gradient(60% 60% at 45% -25%,rgba(206,17,38,.30),transparent 70%);
+  padding:64px 24px 88px;text-align:center}
+.hero::before{opacity:.7}
+.hero-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.hero-bg svg{position:absolute;right:-90px;bottom:-120px;width:560px;height:560px;color:#FCD116;opacity:.10;transform:rotate(-8deg)}
+.hero-grid{position:relative;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:40px;align-items:center}
+.hero-inner{max-width:760px;animation:hrFadeUp .6s ease both}
+.hero-tag{gap:8px}
+.hero-tag svg{width:14px;height:14px;color:var(--brand-gold);flex:none}
+.hero h1{font-size:clamp(36px,6vw,64px);letter-spacing:-1.8px;line-height:1.04}
+.hero h1 em{background:linear-gradient(100deg,#FCD116 0%,#FFE680 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;padding-right:.04em}
+.hero-sub{color:rgba(255,255,255,.78);font-weight:400;font-size:17px;max-width:560px}
+.hero .search-bar .search-field input{border-radius:16px;height:60px}
+.hero .search-bar .search-btn{background:var(--brand-gold);color:#1A1A1A;border-radius:16px;height:60px;padding:0 32px}
+.hero .search-bar .search-btn:hover{background:var(--brand-gold-dark);transform:translateY(-1px)}
+.hero .search-bar .sf-icon{color:var(--green-500)}
+.search-hints{color:rgba(255,255,255,.6);font-size:13px;margin-top:18px}
+.search-hints a{display:inline-block;padding:5px 13px;margin:4px 6px 0 0;border:1px solid rgba(255,255,255,.2);border-radius:999px;color:rgba(255,255,255,.88);background:rgba(255,255,255,.05);transition:all .15s}
+.search-hints a:hover{color:#1A1A1A;background:var(--brand-gold);border-color:var(--brand-gold)}
+.kente{position:absolute;left:0;right:0;bottom:0;height:16px;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='56'%20height='16'%20viewBox='0%200%2056%2016'%3E%3Crect%20width='56'%20height='16'%20fill='%230B1F17'/%3E%3Cpolygon%20points='28,1%2035,8%2028,15%2021,8'%20fill='%23FCD116'/%3E%3Cpolygon%20points='0,0%207,8%200,16'%20fill='%23CE1126'/%3E%3Cpolygon%20points='56,0%2049,8%2056,16'%20fill='%23CE1126'/%3E%3Crect%20x='9'%20y='6'%20width='8'%20height='4'%20fill='%2312A05A'/%3E%3Crect%20x='39'%20y='6'%20width='8'%20height='4'%20fill='%2312A05A'/%3E%3Crect%20y='0'%20width='56'%20height='1.5'%20fill='%23FCD116'%20fill-opacity='.55'/%3E%3Crect%20y='14.5'%20width='56'%20height='1.5'%20fill='%23FCD116'%20fill-opacity='.55'/%3E%3C/svg%3E") repeat-x 0 0/56px 16px}
+
+.hero-visual{display:none;position:relative;width:100%;max-width:370px;justify-self:end;padding:34px 8px 34px 0;animation:hrFadeUp .8s .15s ease both}
+.hv-back{position:absolute;left:-18px;right:34px;top:6px;height:200px;border-radius:24px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);transform:rotate(-5deg)}
+.hv-card{position:relative;z-index:2;background:#fff;color:#13201A;border-radius:24px;padding:20px;text-align:left;box-shadow:0 34px 70px rgba(0,0,0,.5);transform:rotate(2deg);animation:hrFloat 7s ease-in-out infinite}
+.hv-badge{position:absolute;top:-13px;left:18px;background:var(--brand-gold);color:#1A1A1A;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:4px 11px;border-radius:999px}
+.hv-top{display:flex;align-items:center;gap:14px;margin-top:6px}
+.hv-ava{width:52px;height:52px;border-radius:16px;background:var(--tint-green);color:var(--green-600);display:grid;place-items:center;flex:none}
+.hv-ava svg{width:26px;height:26px}
+.hv-name{font-family:var(--font-display);font-weight:700;font-size:17px;line-height:1.2;color:#0E1A14}
+.hv-meta{font-size:13px;color:#5C6B63;margin-top:2px}
+.hv-open{display:inline-flex;align-items:center;gap:7px;margin:16px 0 14px;font-size:12.5px;font-weight:600;color:#05683A;background:var(--tint-green);padding:5px 11px;border-radius:999px}
+.hv-open i{width:7px;height:7px;border-radius:50%;background:#12A05A;display:block}
+.hv-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.hv-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:11px 4px;border-radius:14px;font-size:12px;font-weight:600;background:#F3F1EA;color:#2A3a31}
+.hv-btn svg{width:19px;height:19px}
+.hv-btn.call{background:var(--green-600);color:#fff}
+.hv-chip{position:absolute;z-index:3;left:-28px;bottom:6px;display:flex;align-items:center;gap:8px;background:#fff;color:#13201A;font-size:13px;font-weight:600;padding:9px 14px;border-radius:14px;box-shadow:0 14px 30px rgba(0,0,0,.35);transform:rotate(-3deg)}
+.hv-chip svg{width:18px;height:18px;color:var(--brand-red)}
+
+/* ---------- Stats strip ---------- */
+.stats-strip{background:#fff;border-bottom:1px solid var(--line);padding:22px 24px}
+.stats-inner{gap:0}
+.stat{padding:2px 40px;border-left:1px solid var(--line)}
+.stat:first-child{border-left:0}
+.stat-num{color:var(--green-600);font-size:26px}
+.stat-label{color:#5C6B63;font-size:12.5px}
+
+/* ---------- Categories ---------- */
+.section-header h2{font-size:30px;letter-spacing:-.8px}
+.hdot{width:10px;height:10px;border-radius:3px;transform:rotate(45deg);background:var(--brand-gold)}
+.section-header p{color:#5C6B63}
+.categories-grid{grid-template-columns:repeat(auto-fill,minmax(min(150px,100%),1fr));gap:14px}
+.category-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:18px 18px 16px;border-radius:20px;border:1px solid var(--line);background:#fff}
+.category-card:hover{background:#fff;border-color:var(--green-600);transform:translateY(-3px);box-shadow:0 14px 30px rgba(7,20,15,.10)}
+.cat-icon{display:grid;place-items:center;width:50px;height:50px;border-radius:15px;margin-bottom:16px;transition:transform .2s}
+.cat-icon svg{width:25px;height:25px}
+.category-card:hover .cat-icon{transform:scale(1.08) rotate(-4deg)}
+.c-green{background:var(--tint-green);color:var(--green-600)}
+.c-gold{background:var(--tint-gold);color:#7A5F00}
+.c-red{background:var(--tint-red);color:#B80F22}
+.cat-name{font-size:14.5px;font-weight:700;color:var(--gray-900);line-height:1.3}
+.cat-count{font-size:12px;color:#5C6B63;margin-top:3px}
+.cat-go{position:absolute;top:16px;right:16px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#F3F1EA;color:#5C6B63;opacity:0;transform:translate(-4px,4px);transition:all .2s}
+.cat-go svg{width:14px;height:14px}
+.category-card:hover .cat-go,.category-card:focus-visible .cat-go{opacity:1;transform:none;background:var(--green-600);color:#fff}
+
+/* ---------- How it works ---------- */
+.how-section{background:var(--paper)}
+.steps-grid{gap:18px;margin-top:36px}
+.step{position:relative;text-align:left;background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px 22px 22px}
+.step-ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;margin-bottom:16px}
+.step-ic svg{width:23px;height:23px}
+.step-no{position:absolute;top:20px;right:22px;font-family:var(--font-display);font-weight:800;font-size:30px;line-height:1;color:#E8E2D0}
+.step h3{font-size:17px;margin-bottom:6px}
+.step p{color:#4A5A51}
+
+/* ---------- CTA + footer ---------- */
+.cta-banner{background:linear-gradient(160deg,#006B3F 0%,#04492B 100%);padding-top:76px}
+.cta-banner::after{content:'';position:absolute;left:0;right:0;top:0;height:16px;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='56'%20height='16'%20viewBox='0%200%2056%2016'%3E%3Crect%20width='56'%20height='16'%20fill='%230B1F17'/%3E%3Cpolygon%20points='28,1%2035,8%2028,15%2021,8'%20fill='%23FCD116'/%3E%3Cpolygon%20points='0,0%207,8%200,16'%20fill='%23CE1126'/%3E%3Cpolygon%20points='56,0%2049,8%2056,16'%20fill='%23CE1126'/%3E%3Crect%20x='9'%20y='6'%20width='8'%20height='4'%20fill='%2312A05A'/%3E%3Crect%20x='39'%20y='6'%20width='8'%20height='4'%20fill='%2312A05A'/%3E%3Crect%20y='0'%20width='56'%20height='1.5'%20fill='%23FCD116'%20fill-opacity='.55'/%3E%3Crect%20y='14.5'%20width='56'%20height='1.5'%20fill='%23FCD116'%20fill-opacity='.55'/%3E%3C/svg%3E") repeat-x 0 0/56px 16px}
+.cta-banner p{color:rgba(255,255,255,.82)}
+.mini-flag{display:inline-block;width:20px;height:14px;border-radius:2px;vertical-align:-2px;margin-left:4px;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M12%202.2l2.9%206.6%207.1.6-5.4%204.7%201.6%207-6.2-3.7-6.2%203.7%201.6-7L2%209.4l7.1-.6z'%20fill='%23111'/%3E%3C/svg%3E") center/8px 8px no-repeat,linear-gradient(to bottom,#CE1126 33.3%,#FCD116 33.3% 66.6%,#006B3F 66.6%);box-shadow:0 0 0 1px rgba(255,255,255,.15)}
+
+/* ---------- Breakpoints ---------- */
+@media (min-width:1120px){
+  .hero{text-align:left;padding:76px 24px 96px}
+  .hero-grid{grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr)}
+  .hero-inner{max-width:none}
+  .hero-sub{margin-left:0;margin-right:0}
+  .hero .search-bar{margin:0}
+  .hero-visual{display:block}
+}
+@media (max-width:700px){
+  .stat{padding:2px 14px}
+}
+@media (max-width:560px){
+  .hero{padding:40px 20px 64px}
+  .hero h1{font-size:clamp(30px,9vw,38px);letter-spacing:-1.2px}
+  .hero-sub{font-size:15.5px}
+  .hero .search-bar .search-field input,.hero .search-bar .search-btn{height:56px}
+  .hero-bg svg{width:380px;height:380px;right:-120px;bottom:-60px}
+  .stats-strip{padding:20px 16px}
+  .stat{border-left:0;padding:2px 6px}
+  .section-header h2{font-size:25px}
+  .category-card{padding:16px 14px 14px}
+  .cat-icon{width:46px;height:46px;margin-bottom:12px}
+  .cta-banner{padding-top:64px}
+}
+.menu-icon svg{width:17px;height:17px}
+.menu-icon{color:var(--gray-700)}
+.menu-icon.gold{color:#7A5F00}.menu-icon.green{color:var(--green-600)}.menu-icon.red{color:var(--brand-red)}
+.dropdown-header{background:linear-gradient(135deg,#0E3322 0%,#06130D 100%)}
+.footer{background:var(--ink)}
+.breadcrumb a{color:var(--green-600)}
+@media (prefers-reduced-motion:reduce){
+  .hero-inner,.hero-visual,.hv-card{animation:none}
+  .hv-card{transform:rotate(2deg)}
+  .category-card,.cat-icon,.cat-go{transition:none}
+}
+</style>
+<script src="js/icons.js" defer></script>
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -391,33 +520,33 @@
           </div>
           <div class="dropdown-body">
             <a href="Profile.html" class="menu-item">
-              <div class="menu-icon">👤</div>
+              <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
               <span class="menu-label">My Profile</span>
             </a>
             <a href="Profile.html#listings" class="menu-item">
-              <div class="menu-icon gold">🏪</div>
+              <div class="menu-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9l1.5-5h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9"/><path d="M5 12v8h14v-8"/></svg></div>
               <span class="menu-label">My Business Listings</span>
             </a>
             <a href="Profile.html#reviews" class="menu-item">
-              <div class="menu-icon">⭐</div>
+              <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.2-5.9 3.2 1.2-6.5-4.8-4.6 6.6-.9z"/></svg></div>
               <span class="menu-label">My Reviews</span>
             </a>
             <a href="Profile.html#saved" class="menu-item">
-              <div class="menu-icon green">🔖</div>
+              <div class="menu-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
               <span class="menu-label">Saved Businesses</span>
             </a>
             <a href="Profile.html#notifications" class="menu-item">
-              <div class="menu-icon">🔔</div>
+              <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg></div>
               <span class="menu-label">Notification settings</span>
             </a>
             <div class="menu-sep"></div>
             <a href="Profile.html#personal" class="menu-item">
-              <div class="menu-icon">⚙️</div>
+              <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
               <span class="menu-label">Account Settings</span>
             </a>
             <div class="menu-sep"></div>
             <a href="#" class="menu-item danger" onclick="navSignOut(); return false;">
-              <div class="menu-icon red">🚪</div>
+              <div class="menu-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg></div>
               <span class="menu-label">Sign Out</span>
             </a>
           </div>
@@ -431,8 +560,10 @@
 
 <!-- HERO -->
 <section id="main-content" class="hero">
+  <div class="hero-bg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".35" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.4l7.1-.6z"/></svg></div>
+  <div class="hero-grid">
   <div class="hero-inner">
-    <div class="hero-tag">Where Ghana Finds Business</div>
+    <div class="hero-tag"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.4l7.1-.6z"/></svg>Where Ghana Finds Business</div>
     <h1>Find trusted businesses <em>across Ghana</em></h1>
     <p class="hero-sub">Search thousands of verified local businesses, read honest reviews, and connect with ease — from Accra to Kumasi and beyond.</p>
     <div class="search-bar">
@@ -440,14 +571,14 @@
         <div class="search-field" style="position:relative;">
           <label>What</label>
           <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
-          <input type="text" id="searchWhatInput" placeholder="e.g. chop bar, plumber, pharmacy" aria-label="Search businesses" autocomplete="off">
+          <input type="text" id="searchWhatInput" placeholder="Chop bar, plumber, salon" aria-label="Search businesses" autocomplete="off">
           <div class="search-suggest" id="whatSuggest"></div>
         </div>
         <div class="search-div"></div>
         <div class="search-field" style="position:relative;">
           <label>Where</label>
           <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.6"/></svg>
-          <input type="text" id="searchWhereInput" placeholder="Accra, Kumasi, Tamale..." aria-label="Location" autocomplete="off">
+          <input type="text" id="searchWhereInput" placeholder="Accra, Kumasi, Tamale" aria-label="Location" autocomplete="off">
           <div class="search-suggest" id="whereSuggest"></div>
         </div>
       </div>
@@ -462,6 +593,25 @@
       <a href="Browse.html?category=salons">Salons</a>
     </p>
   </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="hv-back"></div>
+    <div class="hv-card">
+      <span class="hv-badge">Example listing</span>
+      <div class="hv-top">
+        <div class="hv-ava"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+        <div><div class="hv-name">Your Business Name</div><div class="hv-meta">Plumbers &middot; Kumasi, Ashanti</div></div>
+      </div>
+      <div class="hv-open"><i></i> Open today</div>
+      <div class="hv-actions">
+        <span class="hv-btn call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Call</span>
+        <span class="hv-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.3A8 8 0 1 1 21 12z"/></svg>WhatsApp</span>
+        <span class="hv-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Directions</span>
+      </div>
+    </div>
+    <div class="hv-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21s-8-4.9-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 6.1-8 11-8 11z"/></svg>Free to list</div>
+  </div>
+  </div>
+  <div class="kente" aria-hidden="true"></div>
 </section>
 
 <!-- STATS -->
@@ -482,18 +632,18 @@
       <p>Find what you need from businesses across all 16 regions of Ghana</p>
     </div>
     <div class="categories-grid">
-      <a href="Browse.html?category=food" class="category-card" data-cat="food" data-noun="businesses"><span class="cat-icon">🍲</span><div class="cat-name">Chop Bars &amp; Food</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=plumbers" class="category-card" data-cat="plumbers" data-noun="businesses"><span class="cat-icon">🔧</span><div class="cat-name">Plumbers</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=electricians" class="category-card" data-cat="electricians" data-noun="businesses"><span class="cat-icon">⚡</span><div class="cat-name">Electricians</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=pharmacies" class="category-card" data-cat="pharmacies" data-noun="businesses"><span class="cat-icon">💊</span><div class="cat-name">Pharmacies</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=salons" class="category-card" data-cat="salons" data-noun="businesses"><span class="cat-icon">💇🏾</span><div class="cat-name">Salons &amp; Barbering</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=mobile-money" class="category-card" data-cat="mobile-money" data-noun="agents"><span class="cat-icon">📱</span><div class="cat-name">Mobile Money</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=builders" class="category-card" data-cat="builders" data-noun="businesses"><span class="cat-icon">🏗️</span><div class="cat-name">Builders &amp; Masons</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=transport" class="category-card" data-cat="transport" data-noun="operators"><span class="cat-icon">🚐</span><div class="cat-name">Transport &amp; Taxis</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=clinics" class="category-card" data-cat="clinics" data-noun="facilities"><span class="cat-icon">🏥</span><div class="cat-name">Clinics &amp; Hospitals</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=fashion" class="category-card" data-cat="fashion" data-noun="businesses"><span class="cat-icon">👗</span><div class="cat-name">Fashion &amp; Tailors</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=tutors" class="category-card" data-cat="tutors" data-noun="businesses"><span class="cat-icon">🎓</span><div class="cat-name">Tutors &amp; Schools</div><div class="cat-count">&nbsp;</div></a>
-      <a href="Browse.html?category=printing" class="category-card" data-cat="printing" data-noun="businesses"><span class="cat-icon">🖨️</span><div class="cat-name">Printing &amp; Design</div><div class="cat-count">&nbsp;</div></a>
+      <a href="Browse.html?category=food" class="category-card" data-cat="food" data-noun="businesses"><span class="cat-icon c-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 4v3M12 3v4M16 4v3"/></svg></span><div class="cat-name">Chop Bars &amp; Food</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=plumbers" class="category-card" data-cat="plumbers" data-noun="businesses"><span class="cat-icon c-gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><div class="cat-name">Plumbers</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=electricians" class="category-card" data-cat="electricians" data-noun="businesses"><span class="cat-icon c-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></span><div class="cat-name">Electricians</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=pharmacies" class="category-card" data-cat="pharmacies" data-noun="businesses"><span class="cat-icon c-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="8.5" width="18" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M9.2 9.2l5.6 5.6"/></svg></span><div class="cat-name">Pharmacies</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=salons" class="category-card" data-cat="salons" data-noun="businesses"><span class="cat-icon c-gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg></span><div class="cat-name">Salons &amp; Barbering</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=mobile-money" class="category-card" data-cat="mobile-money" data-noun="agents"><span class="cat-icon c-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18h3"/><path d="M9.5 8.5h5M9.5 11.5h5"/></svg></span><div class="cat-name">Mobile Money</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=builders" class="category-card" data-cat="builders" data-noun="businesses"><span class="cat-icon c-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9.3h18M3 14.7h18M9 4v5.3M15 9.3v5.4M9 14.7V20"/></svg></span><div class="cat-name">Builders &amp; Masons</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=transport" class="category-card" data-cat="transport" data-noun="operators"><span class="cat-icon c-gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4.5" width="18" height="12.5" rx="2.5"/><path d="M3 11h18"/><circle cx="7.5" cy="19" r="1.6"/><circle cx="16.5" cy="19" r="1.6"/></svg></span><div class="cat-name">Transport &amp; Taxis</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=clinics" class="category-card" data-cat="clinics" data-noun="facilities"><span class="cat-icon c-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><div class="cat-name">Clinics &amp; Hospitals</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=fashion" class="category-card" data-cat="fashion" data-noun="businesses"><span class="cat-icon c-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg></span><div class="cat-name">Fashion &amp; Tailors</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=tutors" class="category-card" data-cat="tutors" data-noun="businesses"><span class="cat-icon c-gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2.5 9 2.5 12 0v-5"/><path d="M22 10v6"/></svg></span><div class="cat-name">Tutors &amp; Schools</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+      <a href="Browse.html?category=printing" class="category-card" data-cat="printing" data-noun="businesses"><span class="cat-icon c-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="9" rx="2"/><path d="M7 14h10v7H7z"/></svg></span><div class="cat-name">Printing &amp; Design</div><div class="cat-count">&nbsp;</div><span class="cat-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
     </div>
   </div>
 </section>
@@ -517,10 +667,10 @@
       <p>Connecting Ghanaians with trusted local businesses — simple and fast</p>
     </div>
     <div class="steps-grid">
-      <div class="step"><div class="step-num">1</div><h3>Search your area</h3><p>Type what you're looking for and your region or town. We show you the best nearby businesses.</p></div>
-      <div class="step"><div class="step-num">2</div><h3>Compare &amp; review</h3><p>Read verified customer reviews. Check photos, ratings and get quotes from multiple businesses.</p></div>
-      <div class="step"><div class="step-num">3</div><h3>Connect instantly</h3><p>Call, WhatsApp or visit directly. No middlemen, no hidden fees — just a straight connection.</p></div>
-      <div class="step"><div class="step-num">4</div><h3>Leave a review</h3><p>Help your community by sharing your experience and building trust across Ghana.</p></div>
+      <div class="step"><div class="step-ic c-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></div><span class="step-no" aria-hidden="true">01</span><h3>Search your area</h3><p>Type what you're looking for and your region or town. We show you the best nearby businesses.</p></div>
+      <div class="step"><div class="step-ic c-gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.2-5.9 3.2 1.2-6.5-4.8-4.6 6.6-.9z"/></svg></div><span class="step-no" aria-hidden="true">02</span><h3>Compare &amp; review</h3><p>Read verified customer reviews. Check photos, ratings and get quotes from multiple businesses.</p></div>
+      <div class="step"><div class="step-ic c-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></div><span class="step-no" aria-hidden="true">03</span><h3>Connect instantly</h3><p>Call, WhatsApp or visit directly. No middlemen, no hidden fees — just a straight connection.</p></div>
+      <div class="step"><div class="step-ic c-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div><span class="step-no" aria-hidden="true">04</span><h3>Leave a review</h3><p>Help your community by sharing your experience and building trust across Ghana.</p></div>
     </div>
   </div>
 </section>
@@ -595,7 +745,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span id="year"></span> MeNim Ghana. All rights reserved. 🇬🇭</span>
+      <span>© <span id="year"></span> MeNim Ghana. All rights reserved. <span class="mini-flag" role="img" aria-label="Ghana flag"></span></span>
       <script>
         document.getElementById("year").textContent = new Date().getFullYear();
       </script>

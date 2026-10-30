@@ -233,6 +233,8 @@
     .wl-skip { text-align: center; }
   }
 </style>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/icons.js" defer></script>
 </head>
 <body>
 <div class="flag-stripe"></div>
@@ -268,11 +270,11 @@
         <legend class="wl-legend">What brings you to MeNim Ghana?</legend>
         <label class="wl-choice">
           <input type="radio" name="accountType" value="visitor">
-          <span class="wl-choice-box"><span class="wl-ico" aria-hidden="true">🔎</span><strong>I'm looking for businesses</strong><small>Find trusted places near you, save favourites, read and write reviews.</small></span>
+          <span class="wl-choice-box"><span class="wl-ico" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></span><strong>I'm looking for businesses</strong><small>Find trusted places near you, save favourites, read and write reviews.</small></span>
         </label>
         <label class="wl-choice">
           <input type="radio" name="accountType" value="owner">
-          <span class="wl-choice-box"><span class="wl-ico" aria-hidden="true">🏪</span><strong>I own or manage a business</strong><small>List your business, claim an existing listing, reply to reviews.</small></span>
+          <span class="wl-choice-box"><span class="wl-ico" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9l1.5-5h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9"/><path d="M5 12v8h14v-8"/></svg></span><strong>I own or manage a business</strong><small>List your business, claim an existing listing, reply to reviews.</small></span>
         </label>
       </fieldset>
       <p class="wl-error" id="e1" role="alert"></p>
@@ -413,7 +415,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span id="year"></span> MeNim Ghana. All rights reserved. 🇬🇭</span>
+      <span>© <span id="year"></span> MeNim Ghana. All rights reserved. <span class="mini-flag" role="img" aria-label="Ghana flag"></span></span>
       <script>
         document.getElementById("year").textContent = new Date().getFullYear();
       </script>

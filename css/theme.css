@@ -1,0 +1,73 @@
+/* MeNim Ghana shared theme (loaded last on every page).
+   Matches the refreshed home page: deep green-black headers with a Kente-style band,
+   green as the main action colour, flag colours kept as accents, line icons not emoji. */
+:root{--ink:#07140F;--paper:#FAF7EF;--line:#ECE7DA;--green-600:#006B3F;--green-700:#04492B;
+  --tint-green:#E3F3EA;--tint-gold:#FFF3C2;--tint-red:#FCE6E9;
+  --kente:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='56'%20height='16'%20viewBox='0%200%2056%2016'%3E%3Crect%20width='56'%20height='16'%20fill='%230B1F17'/%3E%3Cpolygon%20points='28,1%2035,8%2028,15%2021,8'%20fill='%23FCD116'/%3E%3Cpolygon%20points='0,0%207,8%200,16'%20fill='%23CE1126'/%3E%3Cpolygon%20points='56,0%2049,8%2056,16'%20fill='%23CE1126'/%3E%3Crect%20x='9'%20y='6'%20width='8'%20height='4'%20fill='%2312A05A'/%3E%3Crect%20x='39'%20y='6'%20width='8'%20height='4'%20fill='%2312A05A'/%3E%3Crect%20y='0'%20width='56'%20height='1.5'%20fill='%23FCD116'%20fill-opacity='.55'/%3E%3Crect%20y='14.5'%20width='56'%20height='1.5'%20fill='%23FCD116'%20fill-opacity='.55'/%3E%3C/svg%3E");--hero-glow:radial-gradient(55% 90% at 88% 10%,rgba(252,209,22,.15),transparent 62%),radial-gradient(70% 100% at 0% 100%,rgba(0,107,63,.5),transparent 62%),radial-gradient(60% 70% at 45% -30%,rgba(206,17,38,.28),transparent 70%)}
+
+/* ---------- Dark page headers + Kente band ---------- */
+.page-header,.page-hero,.article-hero,.hero:not(#x){position:relative;overflow:hidden;background-color:var(--ink);background-image:var(--hero-glow);border-bottom:0}
+.page-header{padding:56px 24px 72px}
+.page-hero{padding:52px 24px 68px}
+.article-hero{padding:56px 24px 72px}
+body .hero{padding-bottom:80px}
+.page-header::before,.article-hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg%20width='80'%20height='80'%20viewBox='0%200%2080%2080'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20d='M40%204%20L46%2026%20L70%2026%20L51%2040%20L58%2062%20L40%2049%20L22%2062%20L29%2040%20L10%2026%20L34%2026Z'%20fill='%23ffffff'%20fill-opacity='0.025'/%3E%3C/svg%3E");background-size:80px 80px;pointer-events:none}
+.page-header::after,.page-hero::after,.article-hero::after,body .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:16px;background:var(--kente) repeat-x 0 0/56px 16px;pointer-events:none}
+.page-header-inner,.page-hero-inner,.article-hero-inner{position:relative;z-index:1}
+.page-header h1,.page-hero h1,.article-hero h1,body .hero h1{color:#fff;letter-spacing:-1.2px}
+.page-header p,.page-hero p,body .hero p,body .hero-sub{color:rgba(255,255,255,.8)}
+.page-header a:not(.btn){color:var(--brand-gold)}
+.hero-inner .hero-badge{background:rgba(252,209,22,.14);border:1px solid rgba(252,209,22,.3);color:var(--brand-gold)}
+
+/* ---------- Auth / error pages ---------- */
+.auth-container,.error-container{background:var(--paper)}
+.auth-card{position:relative;overflow:hidden;border-radius:24px;border-color:var(--line);padding-top:60px;box-shadow:0 24px 60px rgba(7,20,15,.12)}
+.auth-card::before{content:'';position:absolute;left:0;right:0;top:0;height:16px;background:var(--kente) repeat-x 0 0/56px 16px}
+.error-icon{width:112px;height:112px;margin:0 auto 24px;border-radius:32px;background:var(--tint-gold);color:#7A5F00;display:grid;place-items:center;font-size:0}
+.error-icon svg{width:52px;height:52px}
+.error-code{background:linear-gradient(100deg,#CE1126,#E0482F);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+
+/* ---------- Main action colour: green ---------- */
+.search-btn,.browse-search-btn,.btn-submit,.btn-save-changes,.btn-empty-cta,.btn-write,.write-review-btn,.wl-btn,.bp-btn-primary,.btn-call,.cta-call-big,.drawer-apply,.deal-btn,.btn-signup{background:var(--green-600);color:#fff}
+.search-btn:hover,.browse-search-btn:hover,.btn-submit:hover,.btn-save-changes:hover,.btn-empty-cta:hover,.btn-write:hover,.write-review-btn:hover,.wl-btn:hover,.bp-btn-primary:hover,.btn-call:hover,.cta-call-big:hover,.drawer-apply:hover,.deal-btn:hover,.btn-signup:hover{background:var(--green-700)}
+.cat-tab.active,.view-btn.active,.page-btn.active{background:var(--green-600);border-color:var(--green-600);color:#fff}
+.step-num{background:var(--green-600)}
+.breadcrumb-inner a,.breadcrumb a{color:var(--green-600)}
+
+/* ---------- Section titles, nav dropdown, footer ---------- */
+.hdot{width:10px;height:10px;border-radius:3px;transform:rotate(45deg)}
+.dropdown-header{background:linear-gradient(135deg,#0E3322 0%,#06130D 100%)}
+.menu-icon svg{width:17px;height:17px}
+.menu-icon{color:var(--gray-700)}
+.menu-icon.gold{color:#7A5F00}.menu-icon.green{color:var(--green-600)}.menu-icon.red{color:var(--brand-red)}
+.nav-cta{box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.footer{background:var(--ink)}
+.mini-flag{display:inline-block;width:20px;height:14px;border-radius:2px;vertical-align:-2px;margin-left:4px;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M12%202.2l2.9%206.6%207.1.6-5.4%204.7%201.6%207-6.2-3.7-6.2%203.7%201.6-7L2%209.4l7.1-.6z'%20fill='%23111'/%3E%3C/svg%3E") center/8px 8px no-repeat,linear-gradient(to bottom,#CE1126 33.3%,#FCD116 33.3% 66.6%,#006B3F 66.6%);box-shadow:0 0 0 1px rgba(255,255,255,.15)}
+
+
+/* ---------- Active / focus states: green instead of red ---------- */
+.side-nav-item.active{background:var(--tint-green);color:var(--green-600);border-color:rgba(0,107,63,.2);box-shadow:inset 3px 0 0 var(--green-600)}
+.tab.active{color:var(--green-600);border-bottom-color:var(--green-600)}
+.region-item.active{background:var(--tint-green);border-color:rgba(0,107,63,.35)}
+.region-item.active .region-count,.region-item.active .region-item-left{color:var(--green-600)}
+.region-item.active .region-dot{background:var(--green-600)}
+.sort-select:focus,.form-select:focus,.form-textarea:focus,.bp-select:focus,.bp-input:focus,.bp-textarea:focus{border-color:var(--green-600);box-shadow:0 0 0 3px rgba(0,107,63,.12);outline:none}
+.form-input:focus{border-color:var(--green-600);box-shadow:0 0 0 3px rgba(0,107,63,.12);outline:none}
+.page-btn:hover,.page-btn.nav:hover{border-color:var(--green-600);color:var(--green-600);background:var(--tint-green)}
+.filters-btn.has-filters{border-color:var(--green-600);color:var(--green-600);background:var(--tint-green)}
+.filter-chip{background:var(--tint-green);color:var(--green-600);border-color:rgba(0,107,63,.25)}
+.bp-seg label:has(input:checked){border-color:var(--green-600);background:var(--tint-green);color:var(--green-700)}
+.card-link,.hours-day.today,.post-title a:hover,.l-phone:hover{color:var(--green-600)}
+.list-phone-btn{background:var(--tint-green);color:var(--green-600)}
+.list-phone-btn:hover{background:var(--green-600);color:#fff}
+
+/* line icons that replaced emoji */
+.listing-placeholder{color:var(--green-600)}
+.article-hero-emoji{color:var(--brand-gold)}
+
+@media (max-width:560px){
+  .page-header{padding:40px 20px 60px}
+  .page-hero{padding:40px 20px 58px}
+  .article-hero{padding:40px 20px 60px}
+  .auth-card{padding-top:52px}
+}

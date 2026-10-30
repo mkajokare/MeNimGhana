@@ -35,7 +35,7 @@
     a.href = 'Admin.html';
     a.className = 'menu-item';
     a.setAttribute('role', 'menuitem');
-    a.innerHTML = '<div class="menu-icon gold">🛡️</div><span class="menu-label">Admin dashboard</span>';
+    a.innerHTML = '<div class="menu-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><span class="menu-label">Admin dashboard</span>';
 
     // Sit above the divider that precedes "Sign Out".
     var signOut = body.querySelector('.menu-item.danger');

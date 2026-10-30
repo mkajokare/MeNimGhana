@@ -164,6 +164,8 @@
 .footer-brand .logo .brand-menim,.footer-brand .logo .star{color:#fff}
 .footer-brand .logo .a{color:#3ED16B}
 </style>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/icons.js" defer></script>
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -200,33 +202,33 @@
           </div>
           <div class="dropdown-body">
             <a href="Profile.html" class="menu-item">
-              <div class="menu-icon">👤</div>
+              <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
               <span class="menu-label">My Profile</span>
             </a>
             <a href="Profile.html#listings" class="menu-item">
-              <div class="menu-icon gold">🏪</div>
+              <div class="menu-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9l1.5-5h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9"/><path d="M5 12v8h14v-8"/></svg></div>
               <span class="menu-label">My Business Listings</span>
             </a>
             <a href="Profile.html#reviews" class="menu-item">
-              <div class="menu-icon">⭐</div>
+              <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.2-5.9 3.2 1.2-6.5-4.8-4.6 6.6-.9z"/></svg></div>
               <span class="menu-label">My Reviews</span>
             </a>
             <a href="Profile.html#saved" class="menu-item">
-              <div class="menu-icon green">🔖</div>
+              <div class="menu-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
               <span class="menu-label">Saved Businesses</span>
             </a>
             <a href="Profile.html#notifications" class="menu-item">
-              <div class="menu-icon">🔔</div>
+              <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg></div>
               <span class="menu-label">Notification settings</span>
             </a>
             <div class="menu-sep"></div>
             <a href="Profile.html#personal" class="menu-item">
-              <div class="menu-icon">⚙️</div>
+              <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
               <span class="menu-label">Account Settings</span>
             </a>
             <div class="menu-sep"></div>
             <a href="#" class="menu-item danger" onclick="navSignOut(); return false;">
-              <div class="menu-icon red">🚪</div>
+              <div class="menu-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg></div>
               <span class="menu-label">Sign Out</span>
             </a>
           </div>
@@ -416,7 +418,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span id="year"></span> MeNim Ghana. All rights reserved. 🇬🇭</span>
+      <span>© <span id="year"></span> MeNim Ghana. All rights reserved. <span class="mini-flag" role="img" aria-label="Ghana flag"></span></span>
       <script>
         document.getElementById("year").textContent = new Date().getFullYear();
       </script>
